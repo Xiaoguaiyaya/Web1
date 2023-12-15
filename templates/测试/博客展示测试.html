@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>博客展示页面</title>
+</head>
+<body>
+    <h1>博客列表</h1>
+    <ul id="blogList">
+        <!-- 博客列表将在这里显示 -->
+    </ul>
+
+    <script>
+        // 使用 JavaScript 获取后端返回的博客数据
+        fetch('http://127.0.0.1:5000/blogAll')
+            .then(response => response.json())
+            .then(data => {
+                const blogList = data.blogs;
+
+                // 遍历博客列表并添加到页面上
+                const ul = document.getElementById('blogList');
+                blogList.forEach(blog => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <h2>${blog.title}</h2>
+                        <p>${blog.text}</p>
+                        <p>作者: ${blog.user_id}</p>
+                        <p>创建时间: ${blog.create_time}</p>
+                    `;
+                    ul.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('获取博客数据时发生错误：', error);
+            });
+    </script>
+</body>
+</html>

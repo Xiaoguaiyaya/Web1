@@ -1,0 +1,132 @@
+nav {
+    width: 100%;
+    height: 5rem;
+}
+
+.logo {
+    float: left;
+    width: 20%;
+    /* 可以根据需要调整宽度 */
+    height: 100%;
+    /* 可以根据需要调整高度 */
+    display: flex;
+    justify-content: center;
+    /* 水平居中 */
+    align-items: center;
+    /* 垂直居中 */
+}
+
+.logo img {
+    width: 50%;
+    height: 100%;
+}
+
+.logo-w {
+    width: 50%;
+    height: 100%;
+    float: left;
+    color: rgb(122, 130, 139);
+}
+
+.logo-w p {
+    font-size: 1.5rem;
+    line-height: 5rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+nav .dl {
+    float: right;
+    display: flex;
+    /* 使用 Flex 布局 */
+    justify-content: right;
+    /* 在主轴上水平居中对齐 */
+    align-items: center;
+    /* 在交叉轴上垂直居中对齐 */
+    width: 30%;
+    height: 100%;
+}
+
+nav .dl .login_a {
+    display: inline-block;
+    text-align: center;
+    line-height: 2.5rem;
+    width: 80%;
+    height: 2.5rem;
+    background-color: #008aff;
+    border: 0;
+    border-radius: 5px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.nav-1 {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    font-size: 1rem;
+    font-weight: 600;
+    /* 使用 Flex 布局 */
+    justify-content: right;
+    /* 在主轴上水平居中对齐 */
+    align-items: center;
+    /* 在交叉轴上垂直居中对齐 */
+    color: rgb(122, 130, 139);
+}
+
+.nav-1 div {
+    width: 33%;
+}
+
+.input-submit {
+    display: flex;
+    width: 33%;
+    width: 100%;
+    justify-content: right;
+    /* 在主轴上水平居中对齐 */
+}
+
+.nav-1-2 {
+    position: relative;
+    /* 父容器相对定位 */
+    display: inline-block;
+    /* 使链接和下拉列表在一行内显示 */
+}
+
+.nav-1-2 .dropdown-list {
+    display: none;
+    /* 初始状态下隐藏下拉列表 */
+    position: absolute;
+    /* 绝对定位，相对于父容器定位 */
+    top: 40px;
+    /* 位于链接下方 */
+    left: -50px;
+    border-radius: 5px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    background-color: #fff;
+    /* 下拉列表的背景色 */
+    border: 1px solid white;
+    box-shadow: 0px 4px 6px rgba(0.1, 0.1, 0.1, 0.1);
+    /* 添加阴影效果 */
+    color: rgb(100, 100, 109);
+}
+
+.nav-1-2 .dropdown-list li {
+    width: 100px;
+    text-align: center;
+    padding: 10px 30px;
+}
+
+.nav-1-2 .dropdown-list li:hover {
+    background-color: #f0f0f0;
+    /* 鼠标悬停时的背景色 */
+}
+
+.dropdown-list li:hover {
+    background-color: #008aff;
+    color: #008aff;
+    /* 鼠标悬停时的背景色 */
+}

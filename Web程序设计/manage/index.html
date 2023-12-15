@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户详情</title>
+    <!-- ================= Favicon ================== -->
+    <!-- Styles -->
+    <link href="assets/css/lib/chartist/chartist.min.css" rel="stylesheet">
+    <link href="assets/css/lib/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/css/lib/themify-icons.css" rel="stylesheet">
+    <link href="assets/css/lib/owl.carousel.min.css" rel="stylesheet" />
+    <link href="assets/css/lib/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="assets/css/lib/weather-icons.css" rel="stylesheet" />
+    <link href="assets/css/lib/menubar/sidebar.css" rel="stylesheet">
+    <link href="assets/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/lib/unix.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-box {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #confirmMessage {
+            margin-top: 10px;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        button {
+            margin-top: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+        <div class="nano">
+            <div class="nano-content">
+                <ul>
+                    <li class="label">主页面</li>
+                    <li class="active"><a class="sidebar-sub-toggle"><i class="ti-home"></i> 平台管理 <span
+                                class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="index.html">Dashboard 1</a></li>
+                            <li><a href="index-v1.html">Dashboard 2</a></li>
+                            <li><a href="index-school.html">Dashboard 3</a></li>
+                            <li><a href="index-restaurant.html">Dashboard 4</a></li>
+                        </ul>
+                    </li>
+                    <li class="label">管理</li>
+                    <li><a class="sidebar-sub-toggle"><i class="ti-pencil-alt"></i>管理界面 <span
+                                class="badge badge-primary">3</span><span
+                                class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="javascript:;" data-page="用户管理.html">用户管理</a></li>
+                            <li><a href="javascript:;" data-page="文章管理.html">文章管理</a></li>
+                            <li><a href="javascript:;" data-page="评论管理.html">评论管理</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="label">数据统计</li>
+                    <li><a class="sidebar-sub-toggle"><i class="ti-cup"></i> 数据统计<span
+                                class="badge badge-primary">7</span> <span
+                                class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="restaurant-menu-one.html">Menu One</a></li>
+                            <li><a href="restaurant-menu-two.html">Menu Two</a></li>
+                            <li><a href="restaurant-menu-three.html">Menu Three</a></li>
+                            <li><a href="restaurant-favourite-list.html">Favourite</a></li>
+                            <li><a href="restaurant-order-list.html">Order List</a></li>
+                            <li><a href="restaurant-booking.html">Booking</a></li>
+                            <li><a href="restaurant-upload-menu.html">Upload Menu</a></li>
+                        </ul>
+                    </li>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="pull-left">
+            <div class="logo"><a
+                    href="index.html"><!-- <img src="assets/images/logo.png" alt="" /> --><span>文章管理系统后台页面</span></a>
+            </div>
+            <div class="hamburger sidebar-toggle">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </div>
+        </div>
+        <div class="pull-right p-r-15">
+            <ul>
+                <li class="header-icon dib"><a href="#search"><i class="ti-search"></i></a></li>
+                <li class="header-icon dib"><img class="avatar-img" src="assets/images/avatar/1.jpg" alt="" /> <span
+                        class="user-avatar">{{用户名}} <i class="ti-angle-down f-s-10"></i></span>
+                    <div class="drop-down dropdown-profile">
+                        <div class="dropdown-content-body">
+                            <ul>
+                                <li><a href="#"><i class="ti-calendar"></i> <span>预留接口</span></a></li>
+                                <li><a href="#"><i class="ti-settings"></i> <span>设置</span></a></li>
+                                <li><a href="#"><i class="ti-help-alt"></i> <span>帮助</span></a></li>
+                                <li><a href="#"><i class="ti-lock"></i> <span>密码修改</span></a></li>
+                                <li><a href="../index.html"><i class="ti-power-off"></i>
+                                        <span>退出</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="overlay" id="passwordOverlay">
+        <div class="password-box">
+            <label for="newPassword">新密码:</label>
+            <input type="password" id="newPassword" oninput="checkPasswordMatch()"><br>
+    
+            <label for="confirmPassword">确认密码:</label>
+            <input type="password" id="confirmPassword" oninput="checkPasswordMatch()">
+            <div id="confirmMessage"></div>
+    
+            <button onclick="changePassword()">确认</button>
+            <button onclick="closePasswordModal()">取消</button>
+        </div>
+    </div>
+
+    </div>
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <!-- jquery vendor -->
+    <script src="assets/js/lib/jquery.nanoscroller.min.js"></script>
+    <!-- nano scroller -->
+    <script src="assets/js/lib/menubar/sidebar.js"></script>
+    <script src="assets/js/lib/preloader/pace.min.js"></script>
+    <!-- sidebar -->
+    <script src="assets/js/lib/bootstrap.min.js"></script>
+    <!-- bootstrap -->
+    <script src="assets/js/lib/weather/jquery.simpleWeather.min.js"></script>
+    <script src="assets/js/lib/weather/weather-init.js"></script>
+    <script src="assets/js/lib/circle-progress/circle-progress.min.js"></script>
+    <script src="assets/js/lib/circle-progress/circle-progress-init.js"></script>
+    <script src="assets/js/lib/chartist/chartist.min.js"></script>
+    <script src="assets/js/lib/chartist/chartist-init.js"></script>
+    <script src="assets/js/lib/sparklinechart/jquery.sparkline.min.js"></script>
+    <script src="assets/js/lib/sparklinechart/sparkline.init.js"></script>
+    <script src="assets/js/lib/owl-carousel/owl.carousel.min.js"></script>
+    <script src="assets/js/lib/owl-carousel/owl.carousel-init.js"></script>
+    <script src="assets/js/scripts.js"></script>
+    <script>
+        function getUserInfo() {
+            var url = window.location.href;
+            var params = url.split('?')[1];
+            var keyValuePairs;
+
+            if (params) {
+                keyValuePairs = params.split('&');
+                var paramsObject = {};
+                for (var i = 0; i < keyValuePairs.length; i++) {
+                    var pair = keyValuePairs[i].split('=');
+                    paramsObject[pair[0]] = pair[1];
+                }
+
+                var userId = paramsObject['id'];
+
+                if (!userId) {
+                    window.location.href = "../Template/html/login.html";
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:5000/get_user",
+                        data: JSON.stringify({ user_id: userId }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.status === '200') {
+                                $(".user-avatar").text(data.username + ' ');
+
+                                // 在异步请求成功后定义 redirectToPage 函数
+                                window.redirectToPage = function (page) {
+                                    window.location.href = page + '?id=' + userId;
+                                };
+                            } else {
+                                console.error('获取用户信息失败:', data.error);
+                            }
+                        },
+                        error: function (error) {
+                            console.error('请求错误:', error);
+                        }
+                    });
+                }
+            } else {
+                window.location.href = "../Template/html/login.html";
+            }
+        }
+
+        // 处理点击事件，确保 data-page 属性包含目标页面
+        $(document).on('click', 'a[data-page]', function (event) {
+            event.preventDefault();
+            redirectToPage($(this).data('page'));
+        });
+
+        // 调用 getUserInfo 获取用户信息并设置页面状态
+        getUserInfo();
+        function openPasswordModal() {
+        document.getElementById('passwordOverlay').style.display = 'flex';
+    }
+
+    function closePasswordModal() {
+        document.getElementById('passwordOverlay').style.display = 'none';
+    }
+
+    function checkPasswordMatch() {
+        var newPassword = document.getElementById('newPassword').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
+        var confirmMessage = document.getElementById('confirmMessage');
+
+        if (newPassword === confirmPassword) {
+            confirmMessage.innerHTML = '<span class="success">密码一致</span>';
+        } else {
+            confirmMessage.innerHTML = '<span class="error">密码不一致</span>';
+        }
+    }
+
+    function changePassword() {
+        // 发送修改密码请求的逻辑
+        // 如果成功，显示密码修改成功的消息，并在3秒后关闭弹窗
+        var passwordBox = document.querySelector('.password-box');
+        passwordBox.innerHTML = '<h2 class="success">密码修改成功</h2>';
+        setTimeout(closePasswordModal, 3000);
+    }
+    </script>
+</body>
+
+</html>

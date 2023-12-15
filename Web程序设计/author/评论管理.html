@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>评论管理</title>
+
+    <!-- ================= Favicon ================== -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Styles -->
+    <link href="assets/css/lib/calendar2/pignose.calendar.min.css" rel="stylesheet">
+    <link href="assets/css/lib/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/css/lib/themify-icons.css" rel="stylesheet">
+    <link href="assets/css/lib/menubar/sidebar.css" rel="stylesheet">
+    <link href="assets/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/lib/unix.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        .comment-link:hover {
+            color: #008aff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+        <div class="nano">
+            <div class="nano-content">
+                <ul>
+                    <li class="label">主页面</li>
+                    <li class="active"><a class="sidebar-sub-toggle" data-page="author.html"><i class="ti-home"></i>
+                            回到主页面 </a>
+                    </li>
+                    <li class="label">管理</li>
+                    <li><a class="sidebar-sub-toggle"><i class="ti-pencil-alt"></i>管理界面<span
+                                class="badge badge-primary">6</span><span
+                                class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="javascript:;" data-page="个人信息.html">个人信息</a></li>
+                            <li><a href="javascript:;" data-page="文章管理.html">文章管理</a></li>
+                            <li><a href="javascript:;" data-page="评论管理.html">评论管理</a></li>
+                            <li><a href="javascript:;" data-page="收藏管理.html">收藏管理</a></li>
+                            <li><a href="javascript:;" data-page="关注管理.html">关注管理</a></li>
+                            <li><a href="javascript:;" data-page="粉丝查看.html">粉丝查看</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="label">数据统计</li>
+                    <li><a class="sidebar-sub-toggle"><i class="ti-cup"></i> 数据统计<span
+                                class="badge badge-primary">7</span> <span
+                                class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="restaurant-menu-one.html">Menu One</a></li>
+                            <li><a href="restaurant-menu-two.html">Menu Two</a></li>
+                            <li><a href="restaurant-menu-three.html">Menu Three</a></li>
+                            <li><a href="restaurant-favourite-list.html">Favourite</a></li>
+                            <li><a href="restaurant-order-list.html">Order List</a></li>
+                            <li><a href="restaurant-booking.html">Booking</a></li>
+                            <li><a href="restaurant-upload-menu.html">Upload Menu</a></li>
+                        </ul>
+                    </li>
+
+
+
+            </div>
+        </div>
+    </div>
+    <!-- /# sidebar -->
+
+    <div class="header">
+        <div class="pull-left">
+            <div class="logo"><a href="index.html"><span>文章管理系统后台页面</span></a></div>
+            <div class="hamburger sidebar-toggle">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </div>
+        </div>
+        <div class="pull-right p-r-15">
+            <ul>
+                <li class="header-icon dib"><a href="#search"><i class="ti-search"></i></a></li>
+                <li class="header-icon dib"><img class="avatar-img" src="assets/images/avatar/1.jpg" alt="" /> <span
+                        class="user-avatar">{{用户名}} <i class="ti-angle-down f-s-10"></i></span>
+                    <div class="drop-down dropdown-profile">
+                        <div class="dropdown-content-body">
+                            <ul>
+                                <li><a href="../index.html"><i class="ti-power-off"></i> <span>退出</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-wrap">
+        <div class="main">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8 p-r-0 title-margin-right">
+                        <div class="page-header">
+                            <div class="page-title">
+                                <h1>主页面</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /# column -->
+                    <div class="col-lg-4 p-l-0 title-margin-left">
+                        <div class="page-header">
+                            <div class="page-title">
+                                <ol class="breadcrumb text-right">
+                                    <li><a href="#">主页面</a></li>
+                                    <li class="active">评论管理</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /# column -->
+                </div>
+                <!-- /# row -->
+                <section id="main-content">
+                    <div class="row" style="width: 100%;">
+                        <div class="col-lg-9" style="width: 100%;">
+                            <div class="card alert" style="width: 100%;">
+                                <div class="card-header pr">
+                                    <h4>评论列表</h4>
+                                    
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table student-data-table m-t-20">
+                                            <thead>
+                                                <tr>
+                                                    <th>评论id</th>
+                                                    <th>评论</th>
+                                                    <th>对应文章id</th>
+                                                    <th>对应文章</th>
+                                                    <th>评论人</th>
+                                                    <th>评论时间</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tbody id="userTableBody"></tbody>
+
+                                            </tbody>
+
+                                        </table>
+                                        <nav aria-label="Page navigation example" style="float: right;">
+                                            <ul class="pagination">
+                                                <li class="page-item">
+                                                    <a class="page-link" href="#" aria-label="Previous">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                                <li class="page-item">
+                                                    <a class="page-link" href="#" aria-label="Next">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /# column -->
+
+                    </div>
+                    <!-- /# row -->
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="footer">
+                                <p>此仪表板生成于 <span id="date-time"></span> <a href="#" class="page-refresh">更新面板</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div id="search">
+        <button type="button" class="close">×</button>
+        <form>
+            <input type="search" value="" placeholder="type keyword(s) here" />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+    <!-- jquery vendor -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <script src="assets/js/lib/jquery.nanoscroller.min.js"></script>
+    <!-- nano scroller -->
+    <script src="assets/js/lib/menubar/sidebar.js"></script>
+    <script src="assets/js/lib/preloader/pace.min.js"></script>
+    <!-- sidebar -->
+    <script src="assets/js/lib/bootstrap.min.js"></script>
+    <!-- bootstrap -->
+    <script src="assets/js/lib/calendar-2/moment.latest.min.js"></script>
+    <!-- scripit init-->
+    <script src="assets/js/lib/calendar-2/semantic.ui.min.js"></script>
+    <!-- scripit init-->
+    <script src="assets/js/lib/calendar-2/prism.min.js"></script>
+    <!-- scripit init-->
+    <script src="assets/js/lib/calendar-2/pignose.calendar.min.js"></script>
+    <!-- scripit init-->
+    <script src="assets/js/lib/calendar-2/pignose.init.js"></script>
+    <script src="assets/js/scripts.js"></script>
+    <!-- scripit init-->
+    <script>
+        var userId;
+        // 定义每页显示的用户数量
+        var pageSize = 10;
+
+        // 当前页数
+        var currentPage = 1;
+
+        // 总页数
+        var totalPages = 0;
+        refreshTable()
+        // 刷新表格函数
+        function refreshTable() {
+            // 发送获取文章列表的请求
+            $.ajax({
+                type: "post",
+                url: "http://127.0.0.1:5000/get_user_comments2",
+                data: JSON.stringify({ user_id: userId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    // 更新页面内容
+                    updateTable(data.user_comments);
+                },
+                error: function (error) {
+                    console.error('请求错误:', error);
+                }
+            });
+        }
+
+
+
+
+        // 更新表格内容
+        function updateTable(comments) {
+            // 清空表格内容
+            $("#userTableBody").empty();
+            // 计算总页数
+            totalPages = Math.ceil(comments.length / pageSize);
+            // 根据当前页数和每页数量计算要显示的用户数据范围
+            var startIndex = (currentPage - 1) * pageSize;
+            var endIndex = Math.min(startIndex + pageSize, comments.length);
+
+            for (var i = startIndex; i < endIndex; i++) {
+                var comment = comments[i];
+                let maxCommentLength = 30;  // 你希望显示的最大字符数
+
+                let truncatedText = comment.comment_text.length > maxCommentLength ?
+                    comment.comment_text.substring(0, maxCommentLength) + '...' :
+                    comment.comment_text;
+                let commentTextHTML = "<a class='comment-link' href='your_target_page.html?article_id=" + comment.blog_id + "'>" + truncatedText + "</a>";
+                let newRow = "<tr>" +
+                    "<td id='comment_id'>" + comment.comment_id + "</td>" +
+                    "<td class='comment_text'>" + comment.comment_text + "</td>" +
+                    "<td>" + comment.blog_id + "</td>" +
+                    "<td>" + comment.blog_title + "</td>" +
+                    "<td>" + comment.commenter + "</td>" +
+                    "<td>" + comment.comment_time + "</td>" +
+                    "<td>" +
+                    "<span class='deleteButton' data-comment-id='" + comment.comment_id + "'><a href='#'><i class='ti-trash color-danger'></i></a></span>" +
+                    "<span>" + '<a href="javascript:void(0);" class="editButton">' + '<i class="ti-pencil-alt color-success"></i>' + "</a>" + "</span>"
+                "</td>" +
+                    "</tr>";
+
+                // 将新行追加到表格体
+                $("#userTableBody").append(newRow);
+            }
+
+            // 更新分页导航
+            updatePagination();
+        }
+
+        // 更新分页导航
+        function updatePagination() {
+            // 清空分页导航
+            $(".pagination").empty();
+
+            // 添加上一页按钮
+            $(".pagination").append('<li class="page-item"><a class="page-link" href="#" onclick="prevPage()">上一页</a></li>');
+
+            // 添加页数按钮
+            for (var i = 1; i <= totalPages; i++) {
+                $(".pagination").append('<li class="page-item"><a class="page-link" href="#" onclick="gotoPage(' + i + ')">' + i + '</a></li>');
+            }
+
+            // 添加下一页按钮
+            $(".pagination").append('<li class="page-item"><a class="page-link" href="#" onclick="nextPage()">下一页</a></li>');
+        }
+
+        // 上一页
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                refreshTable();
+            }
+        }
+
+        // 下一页
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                refreshTable();
+            }
+        }
+
+        // 跳转到指定页
+        function gotoPage(page) {
+            currentPage = page;
+            refreshTable();
+        }
+
+        // 在页面加载时调用刷新表格函数
+        $(document).ready(function () {
+            refreshTable();
+        });
+
+        //删除文章
+        $(document).ready(function () {
+            $('#userTableBody').on('click', '.deleteButton', function () {
+                var id = $(this).data('comment-id');
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://127.0.0.1:5000/delete_comment',
+                    data: JSON.stringify({ comment_id: id }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response.status == '200') {
+                            alert("删除成功");
+                            refreshTable();
+                        } else {
+                            alert("没有该评论");
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("AJAX request failed: " + textStatus, errorThrown);
+                        console.log(jqXHR.responseText);
+                    }
+                });
+            });
+
+            $("#searchIcon").click(function () {
+                var searchTerm = $("#searchInput").val();
+
+                // 刷新表格函数
+                function likeRefreshTable() {
+                    // 获取搜索关键字
+                    var searchKeyword = $(".search-type input").val();
+
+                    // 发送获取评论列表的请求
+                    $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:5000/get_like_comments",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: JSON.stringify({ search: searchKeyword }),  // Send JSON data
+                        success: function (response) {
+                            if (response.status == "200") {
+                                // 更新页面内容
+                                updateTable(response.comments);
+                            } else {
+                                console.error('获取文章列表失败:', response.error);
+                            }
+                        },
+                        error: function (error) {
+                            console.error('请求错误:', error);
+                        }
+                    });
+                }
+                likeRefreshTable();
+                $("#searchInput").val('')
+            });
+
+            // 添加点击编辑按钮时的事件处理程序
+            $(document).on('click', '.editButton', function () {
+                var row = $(this).closest('tr');
+                var comment_text = row.find('.comment_text').text();
+                row.find('.comment_text').html('<input type="text" class="edit-comment_text form-control" value="' + comment_text + '">');
+                row.find('.editButton').html('<a href="javascript:void(0);" class="updateButton"><i class="ti-check color-success"></i></a>');
+            });
+
+
+            $(document).on('click', '.updateButton', function () {
+                var row = $(this).closest('tr');
+                var comment_id = row.find('#comment_id').text();
+                var comment_text = row.find('.edit-comment_text').val();
+                var create_time = new Date().toISOString().split('T')[0];
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://127.0.0.1:5000/modify_comment',
+                    data: JSON.stringify({
+                        comment_id: comment_id,
+                        text: comment_text,
+                        create_time: create_time
+                    }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response.success) {
+                            alert("更新成功");
+                            refreshTable();
+                        } else {
+                            alert("更新失败：" + response.error);
+                        }
+                    },
+                });
+            });
+
+
+            function getUserInfo() {
+                var url = window.location.href;
+                var params = url.split('?')[1];
+                var keyValuePairs;
+
+                if (params) {
+                    keyValuePairs = params.split('&');
+                    var paramsObject = {};
+                    for (var i = 0; i < keyValuePairs.length; i++) {
+                        var pair = keyValuePairs[i].split('=');
+                        paramsObject[pair[0]] = pair[1];
+                    }
+
+                    userId = paramsObject['id'];
+                    if (userId && userId.includes('#')) {
+                        userId = userId.replace('#', '');
+                    }
+
+                    if (!userId) {
+                        window.location.href = "../Template/html/login.html";
+                    } else {
+                        $.ajax({
+                            type: "POST",
+                            url: "http://127.0.0.1:5000/get_user",
+                            data: JSON.stringify({ user_id: userId }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.status === '200') {
+                                    $(".user-avatar").text(data.username + ' ');
+                                    refreshTable(userId)
+                                } else {
+                                    console.error('获取用户信息失败:', data.error);
+                                }
+                            },
+                            error: function (error) {
+                                console.error('请求错误:', error);
+                            }
+                        });
+
+                        // 返回一个函数，该函数接受 page 参数并重定向到该页面
+                        return function redirectToPage(page) {
+                            window.location.href = page + '?id=' + userId;
+                        };
+                    }
+                } else {
+                    window.location.href = "../Template/html/login.html";
+                }
+            }
+
+            // 获取 redirectToPage 函数
+            var redirectToPage = getUserInfo();
+
+            // 处理点击事件，确保 data-page 属性包含目标页面
+            $(document).on('click', 'a[data-page]', function (event) {
+                event.preventDefault();
+                var page = $(this).data('page');
+                redirectToPage(page); // 不再传递 userId，因为已经在 getUserInfo 中获取
+            });
+
+            // 调用 getUserInfo 获取用户信息并设置页面状态
+            getUserInfo();
+        }); 
+    </script>
+</body>
+
+</html>

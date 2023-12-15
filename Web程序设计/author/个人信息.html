@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>用户详情</title>
+
+    <!-- ================= Favicon ================== -->
+
+    <!-- Styles -->
+    <link href="assets/css/lib/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/css/lib/themify-icons.css" rel="stylesheet">
+    <link href="assets/css/lib/menubar/sidebar.css" rel="stylesheet">
+    <link href="assets/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/lib/unix.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            /* 设置body的高度为100视口高度，以确保满屏 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay {
+            z-index: 999;
+            display: none;
+            position: absolute;
+            top: 200px;
+            left: 300px;
+            width: 300px;
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.9);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-box {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #confirmMessage {
+            margin-top: 10px;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        button {
+            margin-top: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+        <div class="nano">
+            <div class="nano-content">
+                <ul>
+                    <li class="label">主页面</li>
+                    <li class="active"><a class="sidebar-sub-toggle" data-page="author.html"><i class="ti-home"></i>
+                            回到主页面 </a>
+                    </li>
+                    <li class="label">管理</li>
+                    <li><a class="sidebar-sub-toggle"><i class="ti-pencil-alt"></i>管理界面<span
+                                class="badge badge-primary">6</span><span
+                                class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="javascript:;" data-page="个人信息.html">个人信息</a></li>
+                            <li><a href="javascript:;" data-page="文章管理.html">文章管理</a></li>
+                            <li><a href="javascript:;" data-page="评论管理.html">评论管理</a></li>
+                            <li><a href="javascript:;" data-page="收藏管理.html">收藏管理</a></li>
+                            <li><a href="javascript:;" data-page="关注管理.html">关注管理</a></li>
+                            <li><a href="javascript:;" data-page="粉丝查看.html">粉丝查看</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="label">数据统计</li>
+                    <li><a class="sidebar-sub-toggle"><i class="ti-cup"></i> 数据统计<span
+                                class="badge badge-primary">7</span> <span
+                                class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="restaurant-menu-one.html">Menu One</a></li>
+                            <li><a href="restaurant-menu-two.html">Menu Two</a></li>
+                            <li><a href="restaurant-menu-three.html">Menu Three</a></li>
+                            <li><a href="restaurant-favourite-list.html">Favourite</a></li>
+                            <li><a href="restaurant-order-list.html">Order List</a></li>
+                            <li><a href="restaurant-booking.html">Booking</a></li>
+                            <li><a href="restaurant-upload-menu.html">Upload Menu</a></li>
+                        </ul>
+                    </li>
+
+
+
+            </div>
+        </div>
+    </div>
+    <!-- /# sidebar -->
+
+    <div class="header">
+        <div class="pull-left">
+            <div class="logo"><a href="index.html"><span>文章管理系统后台页面</span></a></div>
+            <div class="hamburger sidebar-toggle">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </div>
+        </div>
+        <div class="pull-right p-r-15">
+            <ul>
+                <li class="header-icon dib"><a href="#search"><i class="ti-search"></i></a></li>
+                <li class="header-icon dib"><img class="avatar-img" src="assets/images/avatar/1.jpg" alt="" /> <span
+                        class="user-avatar">{{用户名}} <i class="ti-angle-down f-s-10"></i></span>
+                    <div class="drop-down dropdown-profile">
+                        <div class="dropdown-content-body">
+                            <ul>
+                                <li><a href="#"><i class="ti-calendar"></i> <span>预留接口</span></a></li>
+                                <li><a href="#"><i class="ti-settings"></i> <span>设置</span></a></li>
+                                <li><a href="#"><i class="ti-help-alt"></i> <span>帮助</span></a></li>
+                                <li><a href="#" onclick="openPasswordModal()"><i class="ti-lock"></i>
+                                        <span>密码修改</span></a></li>
+                                <li><a href="#"><i class="ti-power-off"></i> <span>退出</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="overlay" id="passwordOverlay">
+        <div class="password-box">
+            <label for="newPassword">新密码:</label>
+            <input type="password" id="newPassword" oninput="checkPasswordMatch"><br>
+
+            <label for="confirmPassword">确认密码:</label>
+            <input type="password" id="confirmPassword" oninput="checkPasswordMatch">
+            <div id="confirmMessage"></div>
+
+            <button onclick="updatePassword()">确认</button>
+            <button onclick="closePasswordModal()">取消</button>
+        </div>
+    </div>
+
+
+    <div class="content-wrap">
+        <div class="main">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8 p-r-0 title-margin-right">
+                        <div class="page-header">
+                            <div class="page-title">
+                                <h1>主页</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /# column -->
+                    <div class="col-lg-4 p-l-0 title-margin-left">
+                        <div class="page-header">
+                            <div class="page-title">
+                                <ol class="breadcrumb text-right">
+                                    <li><a href="#">主页</a></li>
+                                    <li class="active">个人信息</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /# column -->
+                </div>
+                <!-- /# row -->
+                <section id="main-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card alert">
+                                <div class="card-header">
+                                    <h4>用户详情</h4>
+                                    <div class="card-header-right-icon">
+                                        <ul>
+                                            <li class="card-close" data-dismiss="alert"><i class="ti-close"></i></li>
+                                            <li class="card-option drop-menu"><i class="ti-settings"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
+                                                    role="link"></i>
+                                                <ul class="card-option-dropdown dropdown-menu">
+                                                    <li><a href="#"><i class="ti-loop"></i> Update data</a></li>
+                                                    <li><a href="#"><i class="ti-menu-alt"></i> Detail log</a></li>
+                                                    <li><a href="#"><i class="ti-pulse"></i> Statistics</a></li>
+                                                    <li><a href="#"><i class="ti-power-off"></i> Clear ist</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="doc-link"><a href="#"><i class="ti-link"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="user-profile m-t-15">
+                                        <div class="row">
+                                            <div class="col-lg-8">
+                                                <div class="user-profile-name dib" id="usernameDetails"></div>
+                                                <div class="useful-icon dib pull-right">
+                                                    <!-- Add your icon links here -->
+                                                </div>
+                                                <div class="custom-tab user-profile-tab">
+                                                    <ul class="nav nav-tabs" role="tablist">
+                                                        <li role="presentation" class="active"><a href="#1"
+                                                                aria-controls="1" role="tab" data-toggle="tab">About</a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        <div role="tabpanel" class="tab-pane active" id="1">
+                                                            <div class="contact-information">
+                                                                <div class="phone-content">
+                                                                    <span class="contact-title">用户名</span>
+                                                                    <span class="phone-number" id="username"></span>
+                                                                </div>
+                                                                <div class="website-content">
+                                                                    <span class="contact-title">身份</span>
+                                                                    <span class="contact-website" id="identity"></span>
+                                                                </div>
+                                                                <div class="address-content">
+                                                                    <span class="contact-title">用户id</span>
+                                                                    <span class="mail-address" id="userId"></span>
+                                                                </div>
+                                                                <div class="gender-content">
+                                                                    <span class="contact-title">用户发表文章数</span>
+                                                                    <span class="gender" id="articleCount"></span>
+                                                                </div>
+                                                                <div class="phone-content">
+                                                                    <span class="contact-title">用户发表评论数</span>
+                                                                    <span class="phone-number" id="commentCount"></span>
+                                                                </div>
+                                                                <div class="phone-content">
+                                                                    <span class="contact-title">用户关注数</span>
+                                                                    <span class="phone-number"
+                                                                        id="followingCount"></span>
+                                                                </div>
+                                                                <div class="birthday-content">
+                                                                    <span class="contact-title">用户粉丝数</span>
+                                                                    <span class="birth-date" id="followersCount"></span>
+                                                                </div>
+                                                                <div class="birthday-content">
+                                                                    <span class="contact-title">用户积分</span>
+                                                                    <span class="birth-date" id="userintergral"></span>
+                                                                </div>
+                                                                <div class="phone-content">
+                                                                    <span class="contact-title">用户上传附件数</span>
+                                                                    <span class="phone-number"
+                                                                        id="attachmentCount"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /# column -->
+                    </div>
+                    <!-- /# row -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="footer">
+                                <p>此仪表板生成于 <span id="date-time"></span> <a href="#" class="page-refresh">更新界面</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- jquery vendor -->
+    <script src="assets/js/lib/jquery.min.js"></script>
+    <script src="assets/js/lib/jquery.nanoscroller.min.js"></script>
+    <!-- nano scroller -->
+    <script src="assets/js/lib/menubar/sidebar.js"></script>
+    <script src="assets/js/lib/preloader/pace.min.js"></script>
+    <!-- sidebar -->
+    <script src="assets/js/lib/bootstrap.min.js"></script>
+    <!-- bootstrap -->
+
+
+    <script src="assets/js/scripts.js"></script>
+    <!-- scripit init-->
+    <script>
+        var loginUserid
+        function refreshTable(userId) {
+            // 发送获取用户详情列表的请求
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/user-details-h",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ user_id: userId }),
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == '200') {
+                        // 更新页面内容
+                        var user = data.user;
+                        // Render data into the HTML elements
+                        document.getElementById('usernameDetails').textContent = user.username + ' 详情';
+                        document.getElementById('username').textContent = user.username;
+                        document.getElementById('identity').textContent = user.identity;
+                        document.getElementById('userId').textContent = user.user_id;
+                        document.getElementById('articleCount').textContent = user.article_count;
+                        document.getElementById('commentCount').textContent = user.comment_count;
+                        document.getElementById('followingCount').textContent = user.following_count;
+                        document.getElementById('followersCount').textContent = user.followers_count;
+                        document.getElementById('attachmentCount').textContent = user.attachment_count;
+                    } else {
+                        console.error('获取评论列表失败:', data.error);
+                    }
+                },
+                error: function (error) {
+                    console.error('请求错误:', error);
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/calculate_integral",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ user_id: userId }),
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        document.getElementById('userintergral').textContent = data.integral;
+                    }
+                },
+            });
+
+
+        }
+
+
+        function getUserInfo() {
+            var url = window.location.href;
+            var params = url.split('?')[1];
+            var keyValuePairs;
+
+            if (params) {
+                keyValuePairs = params.split('&');
+                var paramsObject = {};
+                for (var i = 0; i < keyValuePairs.length; i++) {
+                    var pair = keyValuePairs[i].split('=');
+                    paramsObject[pair[0]] = pair[1];
+                }
+
+                userId = paramsObject['id'];
+                if (userId && userId.includes('#')) {
+                    userId = userId.replace('#', '');
+                }
+
+                if (!userId) {
+                    window.location.href = "../Template/html/login.html";
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:5000/get_user",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ user_id: userId }),
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.status === '200') {
+                                $(".user-avatar").text(data.username + ' ');
+                            } else {
+                                console.error('获取用户信息失败:', data.error);
+                            }
+                        },
+                        error: function (error) {
+                            console.error('请求错误:', error);
+                        }
+                    });
+                    refreshTable(userId)// 刷新页面
+                    // 返回一个函数，该函数接受 page 参数并重定向到该页面
+                    return function redirectToPage(page) {
+                        window.location.href = page + '?id=' + userId;
+                    };
+                }
+            } else {
+                window.location.href = "../Template/html/login.html";
+            }
+        }
+
+        // 获取 redirectToPage 函数
+        var redirectToPage = getUserInfo();
+
+        // 处理点击事件，确保 data-page 属性包含目标页面
+        $(document).on('click', 'a[data-page]', function (event) {
+            event.preventDefault();
+            var page = $(this).data('page');
+            redirectToPage(page); // 不再传递 userId，因为已经在 getUserInfo 中获取
+        });
+
+        // 调用 getUserInfo 获取用户信息并设置页面状态
+        getUserInfo();
+
+
+        function openPasswordModal() {
+            document.getElementById('passwordOverlay').style.display = 'flex';
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordOverlay').style.display = 'none';
+        }
+
+        function checkPasswordMatch() {
+            var newPassword = document.getElementById('newPassword').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+            var confirmMessage = document.getElementById('confirmMessage');
+
+            if (newPassword === confirmPassword) {
+                confirmMessage.innerHTML = '<span class="success">密码一致</span>';
+            } else {
+                confirmMessage.innerHTML = '<span class="error">密码不一致</span>';
+            }
+        }
+
+        function updatePassword() {
+            var newPassword = $('#newPassword').val();
+            var confirmPassword = $('#confirmPassword').val();
+
+            // 检查密码是否一致
+            if (newPassword !== confirmPassword) {
+                $('#confirmMessage').html('<span class="error">密码不一致</span>');
+                return;
+            }
+
+            // 发送修改密码的请求
+            $.ajax({
+                type: 'POST',
+                url: 'http://127.0.0.1:5000/update_password',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ user_id: loginUserid, password: newPassword }),
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        $('#confirmMessage').html('<span class="success">密码修改成功</span>').css('color', 'green');
+                        setTimeout(function () {
+                            closePasswordModal();
+                        }, 3000);  // 3秒后关闭弹窗
+                    } else {
+                        $('#confirmMessage').html('<span class="error">密码修改失败</span>').css('color', 'red');
+                    }
+                },
+                error: function (error) {
+                    $('#confirmMessage').html('<span class="error">请求错误</span>').css('color', 'red');
+                    console.error('请求错误:', error);
+                }
+            });
+        }
+
+        function openOverlay() {
+            $('#passwordOverlay').show();
+        }
+
+        function closeOverlay() {
+            $('#passwordOverlay').hide();
+            // 清空输入框和状态
+            $('#newPassword').val('');
+            $('#confirmPassword').val('');
+            $('#confirmMessage').text('');
+        }
+
+    </script>
+
+</body>
+
+</html>

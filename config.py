@@ -1,0 +1,8 @@
+# 数据库配置
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:123456@127.0.0.1:3306/web_blog'
+SQLALCHEMY_TRACK_MODIFICATIONS = True
+SQLALCHEMY_ECHO = True
+
+# 上传图片配置
+MAX_CONTENT_LENGTH = 1 * 1024 * 1024
+

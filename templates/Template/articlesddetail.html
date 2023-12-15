@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小怪鸭鸭的文章管理系统</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/navcss/navtemplate.css">
+    <link rel="stylesheet" href="../css/maincss/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+
+        .subheading {
+            width: 100%;
+            height: 70px;
+            line-height: 70px;
+            text-align: center;
+        }
+
+        .collect {
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .Authortime {
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            padding-bottom: 1px;
+            border-bottom: 1px solid #008aff;
+        }
+
+        .star {
+            font-size: 30px;
+            color: grey;
+        }
+
+        .Authortime-left {
+            width: 30%;
+            font-size: 12px;
+            float: left;
+        }
+
+        .Authortime-right {
+            width: 40%;
+            font-size: 12px;
+            float: right;
+        }
+
+        .Authortime-right p {
+            float: left;
+            margin-left: 20px;
+        }
+
+        .collect {
+            float: right;
+            cursor: pointer;
+        }
+
+        .star {
+            font-size: 30px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .star::before {
+            content: '\25BC';
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .yellow {
+            color: yellow;
+        }
+
+        .grey {
+            color: grey;
+        }
+
+        .article {
+            width: 100%;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #008aff;
+        }
+
+        .comment {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #008aff;
+        }
+
+        #comment {
+            width: 100%;
+            height: 50px;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+
+        #submitBtn {
+            width: 40px;
+            height: 30px;
+            /* 调整按钮高度 */
+            box-sizing: border-box;
+        }
+
+        .comment-list-content {
+            font-size: 13px;
+        }
+
+        .comment-list-content-item {
+            width: 100%;
+            line-height: 25px;
+            padding-top: 5px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .comment-list-content-item-left {
+            width: 100%;
+            height: 50px;
+        }
+
+        .comment-list-content-item-left p {
+            display: inline-block;
+            padding-left: 10px;
+        }
+
+        .reply-comment-left {
+            display: inline-block;
+            text-align: right;
+            width: 100%;
+            height: 50px;
+        }
+
+        .reply-comment-1 {
+            width: 100%;
+            line-height: 20px;
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .reply-comment {
+            width: 100%;
+            line-height: 20px;
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .comment-list-content-item-1 {
+            width: 100%;
+            line-height: 25px;
+            padding-left: 20px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .comment-list-content-item-left-1 {
+            width: 100%;
+            height: 30px;
+        }
+
+        .comment-list-content-item-left-1 p {
+            display: inline-block;
+            padding-left: 10px;
+        }
+
+        .comment-list-content-item-right-1,
+        .comment-list-content-item-left-1,
+        .reply-comment {
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .comment-list-content-item-right-1.expanded,
+        .comment-list-content-item-left-1.expanded,
+        .reply-comment.expanded {
+            max-height: none;
+            display: block;
+            max-height: none;
+        }
+
+        .expand-button {
+            cursor: pointer;
+            color: blue;
+            display: inline-block;
+            font-size: 12px;
+            color: #ccc;
+            margin-top: 5px;
+        }
+
+        .reply-input {
+            width: 95%;
+            height: 30px;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+
+        .submit-button {
+            width: 4%;
+            height: 30px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #008aff;
+        }
+
+        .fujian {
+            width: 100px;
+            height: 50px;
+            line-height: 50px;
+            font-size: 13px;
+            color: #999;
+
+        }
+
+        .fujian a:hover {
+            color: #008aff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="body">
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="../image\logo.png" alt="小怪鸭鸭">
+                </a>
+            </div>
+            <div class="logo-w">
+                <p>小怪鸭鸭的文章管理系统-我的评论</p>
+            </div>
+            <div class="dl">
+                <div class="nav-1">
+                    <div class="nav-1-1">
+                        <a href="#" data-page="../index.html">首页</a>
+                    </div>
+                    <div class="input-submit" id="loginButton">
+                        <a href="html/login.html" class="login_a">登录</a>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+        <main class="content">
+            <div class="headline">
+                <p id="headline"></p>
+            </div>
+
+            <div class="subheading">
+                <h1 id="title"></h1>
+            </div>
+
+            <div class="Authortime">
+                <div class="Authortime-left">
+                    <p><a href="user-detail.html" id="authorLink"></a>--发布时间:<span id="publishTime"></span></p>
+                </div>
+                <div class="Authortime-right">
+                    <p>点击率：<span id="clickRate"></span></p>
+                    <p>收藏量：<span id="collectCount"></span></p>
+                    <!-- <div class="collect">
+                        <span id="star" class="star"></span>
+                        <p>点击收藏</p>
+                    </div> -->
+                </div>
+            </div>
+
+            <div class="article" id="articleContent"></div>
+            <!-- <div class="comment">
+                <div>发表评论</div>
+                <div>
+                    <input type="text" id="comment">
+                    <input type="button" value="提交评论">
+                </div>
+            </div> -->
+            <div class="fujian"><a id="click_annex" href="javascript:;">附件下载</a></div>
+            <div class="comment-list">
+                <div>
+                    <h3>评论列表</h3>
+                </div>
+                <div class="comment-list-content" id="commentListContent">
+                    <!-- 评论将在这里渲染 -->
+                </div>
+            </div>
+        </main>
+        <div id="authorPopup"
+            style="display: none; position: absolute; background-color: white; border: 1px solid #ccc; padding: 10px;">
+            <!-- 小窗口内容将在这里显示 -->
+        </div>
+        <footer></footer>
+    </div>
+
+    <script>
+        var userId = 5;
+        var articleId;
+
+
+        // 替换成你的后端接口地址
+        var backendApi = 'http://127.0.0.1:5000/read_article1';
+        const urlParams = new URLSearchParams(window.location.search);
+        articleId = urlParams.get('article_id');
+
+        // 发送更新点击率的请求
+        $.ajax({
+            type: 'POST',
+            url: 'http://127.0.0.1:5000/update_clickthroughrate',
+            data: JSON.stringify({
+                blog_id: articleId,
+                user_id: userId,
+                click: 1  // 这里可以根据需要传递点击的次数，例如每次点击加1
+            }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                if (data.success) {
+                    console.log('点击率更新成功');
+                } else {
+                    console.error('点击率更新失败:', data.error);
+                }
+            },
+            error: function (error) {
+                console.error('请求错误:', error);
+            }
+        });
+        $('#click_annex').click(function () {
+            $.ajax({
+                type: 'get',
+                url: 'http://127.0.0.1:5000/download_annex',
+                data: JSON.stringify({
+                    blog_id: articleId,
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function () {
+                    // 无需处理响应数据，直接跳转到下载链接
+                    window.location.href = 'http://127.0.0.1:5000/download_annex?blog_id=' + articleId;
+                },
+                error: function (error) {
+                    console.error('请求错误:', error);
+                }
+            });
+
+        });
+
+
+        // 发送请求获取文章数据
+        $.ajax({
+            type: "POST",
+            url: backendApi,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({ "article_id": articleId }),
+            success: function (data) {
+                if (data.success) {
+                    // 渲染文章数据
+                    $('#headline').text(data.title1 + "--" + data.title2);
+                    $('#title').text(data.title);
+                    $('#authorLink').text("作者:" + data.author).attr('href', '#');
+                    $('#publishTime').text(data.create_time);
+                    $('#clickRate').text(data.total_click);
+                    $('#collectCount').text(data.total_collect);
+                    $('#articleContent').html(data.text);
+                } else {
+                    console.error('获取文章失败:', data.error);
+                }
+            },
+            error: function (error) {
+                console.error('请求错误:', error);
+            }
+        });
+        function renderComment() {
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/get_article_comments",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({ "article_id": articleId }),
+                success: function (data) {
+                    if (data.success) {
+                        renderComments(data.comments)
+                    } else {
+                        console.error('获取文章失败:', data.error);
+                    }
+                },
+                error: function (error) {
+                    console.error('请求错误:', error);
+                }
+            });
+        }
+        renderComment()
+
+
+        // 渲染评论数据
+        function renderComments(comments) {
+            var commentListContent = $('#commentListContent');
+
+            // 清空评论列表
+            commentListContent.empty();
+
+            // 如果评论数据不为空
+            if (comments.length > 0) {
+                // 遍历评论数据
+                comments.forEach(function (comment) {
+                    // 创建评论项
+                    var commentItem = $('<div class="comment-list-content-item"></div>');
+
+                    // 评论内容部分
+                    var commentRight = $('<div class="comment-list-content-item-right"></div>');
+                    commentRight.append('<p>' + comment.comment_text + '</p>');
+
+                    // 评论人和时间部分
+                    var commentLeft = $('<div class="comment-list-content-item-left"></div>');
+                    commentLeft.append('<p>评论人：' + comment.commenter_username + '</p>');
+                    commentLeft.append('<p>评论时间：' + comment.comment_time + '</p>');
+
+                    // 回复评论部分
+                    var replyComment = $('<div class="reply-comment"></div>');
+
+                    if (comment.replies && comment.replies.length > 0) {
+                        comment.replies.forEach(function (reply) {
+                            var replyItem = $('<div class="comment-list-content-item-1"></div>');
+                            replyItem.append('<div class="comment-list-content-item-right-1"><p>' + reply.reply_text + '</p></div>');
+                            replyItem.append('<div class="comment-list-content-item-left-1"><p>评论人：' + reply.replier_username + '</p><p>评论时间：' + reply.reply_time + '</p></div>');
+                            replyComment.append(replyItem);
+                        });
+
+                        var expandButton = $('<div class="expand-button" style="display: inline-block; font-size: 5px; color: #ccc;">展开或收起回复评论</div>');
+                        expandButton.click(function () {
+                            replyComment.toggle();
+                        });
+
+                    } else {
+                    }
+                    commentLeft.append(expandButton);
+                    commentItem.append(commentRight);
+                    commentItem.append(commentLeft);
+                    commentItem.append(replyComment);
+
+
+
+                    // 添加评论项到评论列表
+                    commentListContent.append(commentItem);
+                });
+            } else {
+                // 如果评论数据为空，可以添加一条提示信息
+                commentListContent.append('<p>欢迎你来评论哦！</p>');
+            }
+        }
+
+        // 点击收藏按钮
+        let starClicked = false;
+
+        $(".collect").click(function () {
+            starClicked = !starClicked;
+            if (starClicked) {
+                $('#star').addClass("yellow").removeClass("grey");
+            } else {
+                $('#star').addClass("grey").removeClass("yellow");
+            }
+        });
+
+    </script>
+    <script src="../js/navjs/navtemplate.js"></script>
+    <script src="../js/index-nav.js"></script>
+    <script src="../js/navjs/header.js"></script>
+    <script src="../js/mainjs/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小怪鸭鸭的文章管理系统</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/navcss/navtemplate.css">
+    <link rel="stylesheet" href="../css/maincss/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .user-info-data-collect {
+            width: 100%;
+            font-size: 14px;
+            font-weight: 300;
+            color: #999;
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+        }
+
+        .user-info-data-concern {
+            width: 100%;
+            font-size: 14px;
+            font-weight: 300;
+            color: #999;
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+        }
+
+        .user-info-data-collect-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #008aff;
+        }
+
+        .user-info-data-concern-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #008aff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="body">
+        <nav>
+            <div class="logo">
+                <a href="javascript:;" data-page="Ordinaryusers.html">
+                    <img src="../image\logo.png" alt="小怪鸭鸭">
+                </a>
+            </div>
+            <div class="logo-w">
+                <p>小怪鸭鸭的文章管理系统-我的主页</p>
+            </div>
+            <div class="dl">
+                <div class="nav-1">
+                    <div class="nav-1-1">
+                        <a href="javascript:;" data-page="Ordinaryusers.html">首页</a>
+                    </div>
+                    <div class="nav-1-2 dropdown-container">
+                        <a href="javascript:;">管理列表</a>
+                        <ul class="dropdown-list">
+                            <li><a href="javascript:;">我的主页</a></li>
+                            <li><a href="javascript:;" data-page="MyComment.html">我的评论</a></li>
+                            <li><a href="javascript:;" data-page="changePassword.html">修改密码</a></li>
+                            <li><a href="../index.html">退出</a></li>
+                        </ul>
+                    </div>
+                    <div class="input-submit" id="loginButton" style="color: black;font-weight: 300;">
+                        {{用户名}}
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+        <main class="content">
+            <div class="user-info">
+                <div>用户id</div>
+                <div>用户姓名</div>
+                <div>用户关注数</div>
+                <div>用户收藏文章数</div>
+            </div>
+            <div class="user-info-data">
+                <div class="user-info-data-collect">
+                    <div class="user-info-data-collect-title">收藏文章表</div>
+                    <div>
+                        <ul id="collectedArticlesList">
+                        </ul>
+                    </div>
+                </div>
+                <div class="user-info-data-concern">
+                    <div class="user-info-data-concern-title">关注用户表</div>
+                    <div>
+                        <ul id="concernedArticlesList">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer></footer>
+    </div>
+
+    <script>
+
+        var userId;
+        function getUserInfo() {
+            var url = window.location.href;
+            var params = url.split('?')[1];
+            var keyValuePairs;
+
+            if (params) {
+                keyValuePairs = params.split('&');
+                var paramsObject = {};
+
+                for (var i = 0; i < keyValuePairs.length; i++) {
+                    var pair = keyValuePairs[i].split('=');
+                    paramsObject[pair[0]] = pair[1];
+                }
+
+                // Check if 'id' parameter exists and remove '#' if present
+                userId = paramsObject['id'];
+                if (userId && userId.includes('#')) {
+                    userId = userId.replace('#', '');
+                }
+
+                if (!userId) {
+                    window.location.href = "../Template/html/login.html";
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:5000/get_user",
+                        data: JSON.stringify({ user_id: userId }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.status === '200') {
+                                $("#loginButton").text(data.username);
+
+                                window.redirectToPage = function (page) {
+                                    window.location.href = page + '?id=' + userId;
+                                };
+                                getUserInfo_data(userId);
+                                get_user_collected_articles(userId);
+                                get_user_concerned_articles(userId)
+                            } else {
+                                console.error('获取用户信息失败:', data.error);
+                            }
+                        },
+                        error: function (error) {
+                            console.error('请求错误:', error);
+                        }
+                    });
+                }
+            } else {
+                window.location.href = "../Template/html/login.html";
+            }
+        }
+
+
+        $(document).on('click', 'a[data-page]', function (event) {
+            event.preventDefault();
+            redirectToPage($(this).data('page'));
+        });
+
+        getUserInfo();
+        function getUserInfo_data(userId) {
+            $.ajax({
+                type: 'post',
+                url: 'http://127.0.0.1:5000/get_user_info',
+                dataType: 'json',
+                data: JSON.stringify({ user_id: userId }),
+                contentType: 'application/json',
+                success: function (data) {
+                    // Update the UI with the received user information
+                    $('.user-info > div:nth-child(1)').text('用户id: ' + userId);
+                    $('.user-info > div:nth-child(2)').text('用户姓名: ' + data.user_name);
+                    $('.user-info > div:nth-child(3)').text('用户关注数: ' + data.follow_count);
+                    $('.user-info > div:nth-child(4)').text('用户收藏文章数: ' + data.collect_count);
+                },
+                error: function (error) {
+                    console.error('获取用户信息失败:', error);
+                }
+            });
+        }
+
+        function get_user_collected_articles(userId) {
+            $.ajax({
+                type: 'post',
+                url: 'http://127.0.0.1:5000/get_user_collected_articles',
+                dataType: 'json',
+                data: JSON.stringify({ user_id: userId }),
+                contentType: 'application/json',
+                success: function (data) {
+                    if (data.success) {
+                        renderCollectedArticles(data.collected_articles);
+                    } else {
+                        console.error('获取收藏错误:', data.error);
+                    }
+                },
+                error: function (error) {
+                    console.error('获取收藏错误:', error);
+                }
+            });
+        }
+        function renderCollectedArticles(collectedArticles) {
+            var collectedArticlesList = $('#collectedArticlesList');
+
+            collectedArticlesList.empty();
+
+            collectedArticles.forEach(function (article) {
+                var listItem = $('<li class="user-info-data-collect-list">');
+                listItem.append('<div><a href="articlesddetail.html?article_id=' + article.id + '&user_id=' + userId + '">' + article.title + '</a></div>');
+                collectedArticlesList.append(listItem);
+            });
+        }
+
+        function get_user_concerned_articles(userId) {
+            $.ajax({
+                type: 'post',
+                url: 'http://127.0.0.1:5000/get_user_concerned_articles',
+                dataType: 'json',
+                data: JSON.stringify({ user_id: userId }),
+                contentType: 'application/json',
+                success: function (data) {
+                    if (data.success) {
+                        if (data.following_users === 0) {
+                            console.log('用户没有关注其他用户');
+                        } else {
+                            renderConcernedArticles(data.following_users);
+                        }
+                    } else {
+                        console.error('获取错误:', data.error);
+                    }
+                },
+            });
+        }
+        function renderConcernedArticles(concernedArticles) {
+            var ConcernedArticlesList = $('#concernedArticlesList');
+
+            ConcernedArticlesList.empty(); 
+
+            concernedArticles.forEach(function (article) {
+                var listItem = $('<li class="user-info-data-concern-list">');
+                listItem.append('<div><a href="user-detail.html?userId=' + userId + '&author=' + article.username + '">' + article.username + '</a></div>');
+
+                ConcernedArticlesList.append(listItem);
+            });
+        }
+
+    </script>
+    <script src="../js/navjs/navtemplate.js"></script>
+    <script src="../js/index-nav.js"></script>
+    <script src="../js/navjs/header.js"></script>
+    <script src="../js/mainjs/main.js"></script>
+</body>
+
+</html>

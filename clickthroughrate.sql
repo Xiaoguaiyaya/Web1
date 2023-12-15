@@ -1,0 +1,10 @@
+INSERT INTO webshixi.clickthroughrate (id, blog_id, user_id, click) VALUES (1, 1, 2, 8);
+INSERT INTO webshixi.clickthroughrate (id, blog_id, user_id, click) VALUES (2, 2, 2, 1);
+INSERT INTO webshixi.clickthroughrate (id, blog_id, user_id, click) VALUES (3, 2, 1, 5);
+INSERT INTO webshixi.clickthroughrate (id, blog_id, user_id, click) VALUES (5, 2, 5, 5);
+INSERT INTO webshixi.clickthroughrate (id, blog_id, user_id, click) VALUES (6, 2, 6, 5);
+INSERT INTO webshixi.clickthroughrate (id, blog_id, user_id, click) VALUES (7, 1, 6, 5);
+INSERT INTO webshixi.clickthroughrate (id, blog_id, user_id, click) VALUES (8, 1, 5, 5);
+INSERT INTO webshixi.clickthroughrate (id, blog_id, user_id, click) VALUES (9, 7, 1, 3);
+INSERT INTO webshixi.clickthroughrate (id, blog_id, user_id, click) VALUES (10, 3, 1, 3);
+INSERT INTO webshixi.clickthroughrate (id, blog_id, user_id, click) VALUES (11, 1, 1, 3);

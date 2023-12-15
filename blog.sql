@@ -1,0 +1,10 @@
+INSERT INTO webshixi.blog (id, title1, title2, creat_time, user_id, text, title) VALUES (1, '编程语言', 'python', '2023-11-22', 2, '测试文章2', '测试标题1');
+INSERT INTO webshixi.blog (id, title1, title2, creat_time, user_id, text, title) VALUES (2, '编程语言', 'C', '2023-11-22', 1, '测试文章', '测试标题2');
+INSERT INTO webshixi.blog (id, title1, title2, creat_time, user_id, text, title) VALUES (3, '编程语言', 'C', '2023-11-22', 1, '测试文章', '测试标题3');
+INSERT INTO webshixi.blog (id, title1, title2, creat_time, user_id, text, title) VALUES (4, '编程语言', 'java', '2023-11-22', 2, '测试文章', '测试标题4');
+INSERT INTO webshixi.blog (id, title1, title2, creat_time, user_id, text, title) VALUES (5, '编程语言', 'C', '2023-11-22', 2, '测试文章', '测试标题5');
+INSERT INTO webshixi.blog (id, title1, title2, creat_time, user_id, text, title) VALUES (6, '编程语言', 'C', '2023-11-22', 2, '测试文章', '测试标题6');
+INSERT INTO webshixi.blog (id, title1, title2, creat_time, user_id, text, title) VALUES (7, '编程语言', 'java', '2023-11-22', 1, '测试文章', '测试标题7');
+INSERT INTO webshixi.blog (id, title1, title2, creat_time, user_id, text, title) VALUES (8, '编程语言', 'C', '2023-11-22', 1, '测试文章', '测试标题8');
+INSERT INTO webshixi.blog (id, title1, title2, creat_time, user_id, text, title) VALUES (9, '编程语言', 'python', '2023-11-22', 1, '测试文章', '测试标题9');
+INSERT INTO webshixi.blog (id, title1, title2, creat_time, user_id, text, title) VALUES (10, '编程语言', 'C', '2023-11-22', 1, '测试文章', '测试标题10');

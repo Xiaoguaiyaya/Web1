@@ -1,0 +1,52 @@
+.dropdown-container-0 a {
+    text-decoration: none;
+    cursor: pointer;
+    color: inherit;
+}
+
+.dropdown-container-0 {
+    position: relative;
+    /* 父容器相对定位 */
+    display: inline-block;
+    /* 使链接和下拉列表在一行内显示 */
+    color: rgb(122, 130, 139);
+    font-family: 600;
+}
+
+.dropdown-container-0 .dropdown-list-0 {
+    z-index: 1;
+    display: none;
+    /* 初始状态下隐藏下拉列表 */
+    position: absolute;
+    /* 绝对定位，相对于父容器定位 */
+    top: 50px;
+    /* 位于链接下方 */
+    left: -20px;
+    border-radius: 5px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    background-color: #fff;
+    /* 下拉列表的背景色 */
+    border: 1px solid white;
+    box-shadow: 0px 4px 6px rgba(0.1, 0.1, 0.1, 0.1);
+    /* 添加阴影效果 */
+}
+
+.dropdown-container-0 .dropdown-list-0 li {
+    height: 30px;
+    width: 80px;
+    line-height: 30px;
+    text-align: center;
+    padding: 10px 30px;
+}
+
+.dropdown-container-0 .dropdown-list-0 li:hover {
+    background-color: #f0f0f0;
+    /* 鼠标悬停时的背景色 */
+}
+
+.dropdown-list-0 li:hover {
+    background-color: #008aff;
+    color: #008aff;
+}

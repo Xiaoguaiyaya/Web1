@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小怪鸭鸭的文章管理系统</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/navcss/navtemplate.css">
+    <link rel="stylesheet" href="../css/maincss/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .time {
+            font-size: 10px;
+            color: #999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="body">
+        <nav>
+            <div class="logo">
+                <a href="author.html">
+                    <img src="../image\logo.png" alt="小怪鸭鸭">
+                </a>
+            </div>
+            <div class="logo-w">
+                <p>小怪鸭鸭的文章管理系统-注册用户界面界面</p>
+            </div>
+            <div class="dl">
+                <div class="nav-1">
+                    <div class="nav-1-1">
+                        <a href="javascript:;">首页</a>
+                    </div>
+                    <div class="nav-1-2 dropdown-container">
+                        <a href="#">管理列表</a>
+                        <ul class="dropdown-list">
+                            <li><a href="#" data-page="index.html">管理界面</a></li>
+                            <li><a href="#" data-page="写文章.html">写文章</a></li>
+                            <li><a href="#" data-page="changePassword.html">修改密码</a></li>
+                            <li><a href="../index.html">退出</a></li>
+                        </ul>
+                    </div>
+                    <div class="input-submit" id="loginButton" style="color: black;font-weight: 300;">
+                        {{用户名}}
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+        <header>
+            <div class="header-1">
+                <div class="header-1-1">
+                    <a href="index.html">首页</a>
+                </div>
+                <div class="nav-list" id="navList">
+                </div>
+                <div class="search">
+                    <div class="ser-in">
+                        <input type="text" id="search" value="请输入搜索内容">
+                    </div>
+                    <div class="ser-bt">
+                        <a href="javascript:;" id="searchBtn">搜索</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="content">
+            <div class="main-1">
+                <div class="main-1-1">
+                    <div class="main-11-left">
+                        <div class="slideshow-container">
+                            <div class="slide fade">
+                                <img src="../image/轮播图/001.png" alt="Image 1">
+                                <div class="arrow-container">
+                                    <div class="left-arrow prev" id="prev"></div>
+                                    <div class="right-arrow next" id="next"></div>
+                                </div>
+                            </div>
+                            <div class="slide fade">
+                                <img src="../image/轮播图/002.png" alt="Image 2">
+                                <div class="arrow-container">
+                                    <div class="left-arrow prev" id="prev"></div>
+                                    <div class="right-arrow next" id="next"></div>
+                                </div>
+                            </div>
+                            <div class="slide fade">
+                                <img src="../image/轮播图/003.png" alt="Image 3">
+                                <div class="arrow-container">
+                                    <div class="left-arrow prev" id="prev"></div>
+                                    <div class="right-arrow next" id="next"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="main-11-right">
+                        <ul>
+                        </ul>
+                    </div>
+                </div>
+                <div class="main-1-2">
+                    <div class="main-12 main-12-left">
+                        <div class="theme">
+                            <h4>点击率最高的文章</h4>
+                        </div>
+                        <div class="main-12-left-list-1">
+                            <ul>
+                                <li data-article-id="">
+                                    <div class="main-12-left-list-time">文章发布时间</div>
+                                    <div class="main-12-left-list-title"><a href="#" class="article-link">文章标题</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="main-12 main-12-right">
+                        <div class="theme">
+                            <h4>别收藏最多的文章</h4>
+                        </div>
+                        <div class="main-12-right-list-2">
+                            <ul>
+                                <li data-article-id="">
+                                    <div class="main-12-right-list-time">文章发布时间</div>
+                                    <div class="main-12-right-list-title"><a href="#" class="article-link">文章标题</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer></footer>
+    </div>
+
+    <script>
+        var userId;
+        document.addEventListener('DOMContentLoaded', function () {
+            const jsonData = {
+                "categories": [
+                    {
+                        "name": "编程语言",
+                        "subtitles": ["C语言", "python", "其它"]
+                    },
+                    {
+                        "name": "数据结构",
+                        "subtitles": ["常用算法", "进阶算法", "其它"]
+                    },
+                    {
+                        "name": "web开发",
+                        "subtitles": ["前端", "后端", "其它"]
+                    },
+                    {
+                        "name": "数据库",
+                        "subtitles": ["关系数据库", "非关系", "其它"]
+                    },
+                    {
+                        "name": "大数据",
+                        "subtitles": ["大数据框架", "大数据基础", "其它"]
+                    },
+                    {
+                        "name": "机器学习",
+                        "subtitles": ["机器学习", "深度学习", "其它"]
+                    },
+                    {
+                        "name": "其它文章",
+                        "subtitles": ["计算机", "非计算机", "其它"]
+                    },
+                ]
+            };
+
+            const navList = document.getElementById('navList');
+
+            jsonData.categories.forEach(categoryData => {
+                const dropdownContainer = document.createElement('div');
+                dropdownContainer.className = 'dropdown-container-0';
+
+                const link = document.createElement('a');
+                link.href = 'articles.html?id=' + userId;
+                link.textContent = categoryData.name;
+                link.onclick = function () {
+                    navigateToCategory(categoryData.name, categoryData.subtitles[0]);
+                };
+
+                const dropdownList = document.createElement('ul');
+                dropdownList.className = 'dropdown-list-0';
+
+                categoryData.subtitles.forEach(subtitle => {
+                    const subOption = document.createElement('li');
+                    const subLink = document.createElement('a');
+                    subLink.href = '#';
+                    subLink.textContent = subtitle;
+                    subLink.onclick = function () {
+                        navigateToSubtitle(categoryData.name, subtitle);
+                    };
+                    subOption.appendChild(subLink);
+                    dropdownList.appendChild(subOption);
+                });
+
+                dropdownContainer.appendChild(link);
+                dropdownContainer.appendChild(dropdownList);
+                navList.appendChild(dropdownContainer);
+            });
+        });
+
+        function navigateToCategory(category, subtitle) {
+            sessionStorage.setItem('selectedCategory', category);
+            sessionStorage.setItem('selectedSubtitle', subtitle);
+            window.location.href = 'articles.html' + '?id=' + userId;
+        }
+
+        function navigateToSubtitle(category, subtitle) {
+            sessionStorage.setItem('selectedCategory', category);
+            sessionStorage.setItem('selectedSubtitle', subtitle);
+            window.location.href = 'articles.html' + '?id=' + userId;
+        }
+        // 发送 AJAX 请求获取最新文章
+        $.ajax({
+            type: 'GET',
+            url: 'http://127.0.0.1:5000/latest_articles',  // 根据你的实际路由设置
+            dataType: 'json',
+            success: function (data) {
+                // 渲染文章数据
+                renderArticles(data);
+            },
+            error: function (error) {
+                console.error('请求错误:', error);
+            }
+        });
+
+        // 渲染文章数据
+        function renderArticles(articles) {
+            const ulElement = $('.main-11-right ul');
+
+            // 清空现有的 <li> 元素
+            ulElement.empty();
+
+            // 遍历文章数据并渲染每一篇文章
+            $.each(articles, function (index, article) {
+                const liElement = $('<li>');
+                const titleElement = $('<div>').addClass('title').text(article.title);
+                const timeElement = $('<div>').addClass('time').text(article.creat_time);
+
+                liElement.append(titleElement);
+                liElement.append(timeElement);
+
+                ulElement.append(liElement);
+            });
+        }
+
+        // 监听搜索按钮点击事件,获取搜索关键词
+        $("#searchBtn").click(function () {
+            var keyword = $("#search").val();
+
+            $.ajax({
+                type: 'post',
+                url: 'http://127.0.0.1:5000/search_articles',
+                dataType: 'json',
+                data: JSON.stringify({ 'keyword': keyword }),
+                contentType: 'application/json',
+                success: function (data) {
+                    displaySearchResults(data.articles);
+                },
+                error: function (error) {
+                    console.error('搜索失败:', error);
+                }
+            });
+        });
+        // 渲染文章数据
+        function displaySearchResults(articles) {
+            const ulElement = $('.main-11-right ul');
+
+            ulElement.empty();
+
+            $.each(articles, function (index, article) {
+                const liElement = $('<li>');
+                const titleElement = $('<div>').addClass('title');
+                const articleLink = $('<a>').attr('href', 'articlesddetail.html?article_id=' + article.article_id + '&user_id=' + userId).text(article.title);
+
+                titleElement.append(articleLink);
+                const timeElement = $('<div>').addClass('time').text(article.creat_time);
+
+                liElement.append(titleElement);
+                liElement.append(timeElement);
+
+                ulElement.append(liElement);
+            });
+        }
+
+
+        function getUserInfo() {
+            var url = window.location.href;
+            var params = url.split('?')[1];
+            var keyValuePairs;
+
+            if (params) {
+                keyValuePairs = params.split('&');
+                var paramsObject = {};
+                for (var i = 0; i < keyValuePairs.length; i++) {
+                    var pair = keyValuePairs[i].split('=');
+                    paramsObject[pair[0]] = pair[1];
+                }
+
+                userId = paramsObject['id'];
+                if (userId && userId.includes('#')) {
+                    userId = userId.replace('#', '');
+                }
+
+                if (!userId) {
+                    window.location.href = "../Template/html/login.html";
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:5000/get_user",
+                        data: JSON.stringify({ user_id: userId }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.status === '200') {
+                                // 渲染用户名到指定的元素
+                                $("#loginButton").text(data.username);
+
+                                // 在异步请求成功后定义 redirectToPage 函数
+                                window.redirectToPage = function (page) {
+                                    window.location.href = page + '?id=' + userId;
+                                };
+                            } else {
+                                console.error('获取用户信息失败:', data.error);
+                            }
+                        },
+                        error: function (error) {
+                            console.error('请求错误:', error);
+                        }
+                    });
+                }
+            } else {
+                window.location.href = "../Template/html/login.html";
+            }
+        }
+        // 发送 AJAX 请求到后端获取点击率最高的文章数据
+        $.ajax({
+            type: 'GET',
+            url: 'http://127.0.0.1:5000/get_eight_clicked_articles',
+            dataType: 'json',
+            success: function (data) {
+                if (data.success) {
+                    // 清空目标模块下的 ul
+                    $('.main-12-left-list-1 ul').empty();
+
+                    // 遍历返回的数据并渲染到目标模块的 ul
+                    data.data.forEach(function (article) {
+                        var listItem = $('<li>').attr('data-article-id', article.article_id);
+                        var timeDiv = $('<div>').addClass('main-12-left-list-time').text(article.publish_time);
+                        var titleDiv = $('<div>').addClass('main-12-left-list-title').append(
+                            $('<a>').attr('href', 'articlesddetail.html?article_id=' + article.article_id + '&user_id=' + userId).addClass('article-link').text(article.title)
+                        );
+
+                        listItem.append(timeDiv).append(titleDiv);
+                        $('.main-12-left-list-1 ul').append(listItem);
+                    });
+                } else {
+                    console.error('获取文章列表失败:', data.error);
+                }
+            },
+            error: function (error) {
+                console.error('请求错误:', error);
+            }
+        });
+        // 发送 AJAX 请求到后端获取收藏最高的文章数据
+        $.ajax({
+            type: 'GET',
+            url: 'http://127.0.0.1:5000/top8_collected_articles',
+            dataType: 'json',
+            success: function (data) {
+                if (data.success) {
+                    // 清空目标模块下的 ul
+                    $('.main-12-right-list-2 ul').empty();
+
+                    // 遍历返回的数据并渲染到目标模块的 ul
+                    data.data.forEach(function (article) {
+                        var listItem = $('<li>').attr('data-article-id', article.article_id);
+                        var timeDiv = $('<div>').addClass('main-12-right-list-time').text(article.creat_time);
+                        var titleDiv = $('<div>').addClass('main-12-right-list-title').append(
+                            $('<a>').attr('href', 'articlesddetail.html?article_id=' + article.article_id + '&user_id=' + userId).addClass('article-link').text(article.title)
+                        );
+
+                        listItem.append(timeDiv).append(titleDiv);
+                        $('.main-12-right-list-2 ul').append(listItem);
+                    });
+                } else {
+                    console.error('获取文章列表失败:', data.error);
+                }
+            },
+            error: function (error) {
+                console.error('请求错误:', error);
+            }
+        });
+
+
+        // 处理点击事件，确保 data-page 属性包含目标页面
+        $(document).on('click', 'a[data-page]', function (event) {
+            event.preventDefault();
+            redirectToPage($(this).data('page'));
+        });
+
+        // 调用 getUserInfo 获取用户信息并设置页面状态
+        getUserInfo();
+
+    </script>
+    <script src="../js/navjs/navtemplate.js"></script>
+    <script src="../js/index-nav.js"></script>
+    <script src="../js/navjs/header.js"></script>
+    <script src="../js/mainjs/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .dropdown-container-0 a {
+            text-decoration: none;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        .dropdown-container-0 a:hover {
+            color: #008aff;
+        }
+
+        .dropdown-container-0 {
+            position: relative;
+            /* 父容器相对定位 */
+            display: inline-block;
+            /* 使链接和下拉列表在一行内显示 */
+            color: rgb(122, 130, 139);
+            font-family: 600;
+        }
+
+        .dropdown-container-0 .dropdown-list-0 {
+            display: none;
+            /* 初始状态下隐藏下拉列表 */
+            position: absolute;
+            /* 绝对定位，相对于父容器定位 */
+            top: 40px;
+            /* 位于链接下方 */
+            left: -50px;
+            border-radius: 5px;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #fff;
+            /* 下拉列表的背景色 */
+            border: 1px solid white;
+            box-shadow: 0px 4px 6px rgba(0.1, 0.1, 0.1, 0.1);
+            /* 添加阴影效果 */
+        }
+
+        .dropdown-container-0 .dropdown-list-0 li {
+            width: 100px;
+            text-align: center;
+            padding: 10px 30px;
+        }
+
+        .dropdown-container-0 .dropdown-list-0 li:hover {
+            background-color: #f0f0f0;
+            /* 鼠标悬停时的背景色 */
+        }
+
+        .dropdown-list-0 li:hover {
+            background-color: #008aff;
+            color: #008aff;
+            /* 鼠标悬停时的背景色 */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dropdown-container-0">
+        <a href="#">悬停在我上面</a>
+        <ul class="dropdown-list-0">
+            <li><a href="#">选项 1</a></li>
+            <li><a href="#">选项 2</a></li>
+            <li><a href="#">选项 3</a></li>
+        </ul>
+    </div>
+    <script>
+        const navContainer = document.querySelector('.dropdown-container-0');
+        const dropdownList = navContainer.querySelector('.dropdown-list-0');
+
+        let timeoutId; // 用于延迟隐藏下拉列表
+
+        navContainer.addEventListener('mouseenter', () => {
+            clearTimeout(timeoutId); // 清除延迟隐藏的计时器
+            dropdownList.style.display = 'block';
+            dropdownList.style.animation = 'expandDropdown 0.3s ease-in-out'; // 添加展开动画
+        });
+
+        navContainer.addEventListener('mouseleave', () => {
+            timeoutId = setTimeout(() => {
+                dropdownList.style.animation = 'collapseDropdown 0.3s ease-in-out';
+                dropdownList.style.display = 'none';
+            }, 300); // 设置0.5秒延迟
+        });
+
+        dropdownList.addEventListener('mouseenter', () => {
+            clearTimeout(timeoutId); // 清除延迟隐藏的计时器
+        });
+
+        dropdownList.addEventListener('mouseleave', () => {
+            timeoutId = setTimeout(() => {
+                dropdownList.style.animation = 'collapseDropdown 0.3s ease-in-out';
+                dropdownList.style.display = 'none';
+            }, 300); // 设置0.5秒延迟
+        });
+    </script>
+</body>
+
+</html>

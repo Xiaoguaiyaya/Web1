@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <style>
+        .center-div {
+            width: 430px;
+            height: 550px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            /* 用于清除浮动，防止子元素溢出 */
+        }
+
+        .center-div>div:first-child {
+            height: 85%;
+            width: 100%;
+            /* 七分之六 */
+            /* 为了演示，可以删除这行 */
+        }
+
+        .center-div>div:last-child {
+            height: 82.5px;
+            width: 100%;
+            /* 七分之一 */
+            border-top: 1px solid rgb(234, 236, 243);
+            /* 上边框，模拟分隔线 */
+        }
+
+        .denglu {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 50px;
+        }
+
+        .login_title {
+            display: inline-block;
+            height: 15px;
+            width: 100%;
+            font-size: 30px;
+            font-weight: 600;
+            color: #152c5b;
+        }
+
+        .login_title1 {
+            width: 100%;
+            height: 50px;
+            font-size: 15px;
+            line-height: 50px;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+
+        .zhanghao {
+            color: #718096;
+            height: 50px;
+            width: 100%;
+            line-height: 50px;
+        }
+
+        .kuang {
+            height: 50px;
+            width: 97%;
+        }
+
+
+        .submit {
+            padding-top: 20px;
+            width: 100%;
+            height: 70px;
+        }
+
+        .submit input {
+            width: 100%;
+            height: 50px;
+            background-color: rgb(0, 138, 255);
+            border: 0px;
+            border-radius: 5px;
+        }
+
+        .kuang::placeholder {
+            color: #a0a0a0;
+            /* Change this to your desired light color */
+        }
+
+        /* Style for the "显示密码" button */
+        .show-password-button {
+            float: right;
+            width: 30%;
+            margin-top: 10px;
+            /* Adjust as needed for vertical spacing */
+        }
+
+        .registration1,
+        .registration2 {
+            line-height: 82.5px;
+            float: left;
+            color: #718096;
+            box-sizing: border-box;
+            padding-left: 50px;
+            font-size: 15px;
+        }
+
+        .registration2 {
+            padding-left: 0px;
+            color: rgb(0, 138, 255);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            /* 可以添加其他样式，根据需要自行调整 */
+        }
+    </style>
+    <title>账号注册</title>
+</head>
+
+<body>
+    <div class="center-div">
+        <div>
+            <div class="denglu">
+                <div class="login_title">Registration</div>
+                <div class="login_title1">注册你的账号</div>
+                <div class="identity">
+                    <label>
+                        <input type="radio" name="userType" value="注册用户" id="Registered_Users"> 注册用户
+                    </label>
+                    <label>
+                        <input type="radio" name="userType" value="作者" id="author"> 作者
+                    </label>
+                </div>
+                <div class="login_name">
+                    <div class="zhanghao">账号</div>
+                    <input class="kuang" type="text" id="user" placeholder="输入账号" />
+                    <div id="errorDiv"></div>
+                    <div class="zhanghao">
+                        <div style="float: left; width: 70%;">密码</div>
+                        <input class="show-password-button" type="button" id="showPassword" value="显示密码">
+                    </div>
+                    <input class="kuang" type="password" id="password" />
+                    <div class="submit">
+                        <input type="submit" id="submit" value="注册" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="registration1">已有账号？</div>
+            <div class="registration2"><a href="login.html">登录账号</a></div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var passwordInput = document.getElementById("password");
+            var showPasswordButton = document.getElementById("showPassword");
+
+            showPasswordButton.addEventListener("click", function () {
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    showPasswordButton.value = "隐藏密码";
+                } else {
+                    passwordInput.type = "password";
+                    showPasswordButton.value = "显示密码";
+                }
+            });
+            // 获取输入框
+            var userInputElement = document.getElementById('user');
+
+            // 监听输入框的 blur 事件
+            userInputElement.addEventListener('blur', function () {
+                // 获取输入框中的用户名
+                var username = userInputElement.value;
+
+                // 检查用户名是否为空
+                if (username.trim() === '') {
+                    console.log('用户名为空');
+                    // 在输入框后面显示提示
+                    displayMessage('用户名不能为空', 'red', 'errorDiv');
+                    return; // 不发送请求，退出函数
+                }
+
+                // 发送验证请求到后端
+                $.ajax({
+                    type: "POST",
+                    url: "http://127.0.0.1:5000/check_user",
+                    data: JSON.stringify({ username: username }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    crossDomain: true,
+                    success: function (data) {
+                        if (data.status == 200) {
+                            displayMessage('用户名存在', 'red', 'errorDiv');
+                            userInputElement.value = '';
+                        } else if (data.status == 401) {
+                            console.log('不存在');
+                            displayMessage('用户名不存在可注册', 'green', 'errorDiv');
+                        } else {
+                            console.log('其他错误');
+                        }
+                    },
+                    error: function (error) {
+                        console.error('请求错误:', error);
+                    }
+                });
+            });
+
+            function displayMessage(message, color, targetDivId) {
+                var targetDiv = document.getElementById(targetDivId);
+                if (targetDiv) {
+                    var messageElement = document.createElement('div');
+                    messageElement.textContent = message;
+                    messageElement.style.color = color;
+                    // 清空 div 内容
+                    targetDiv.innerHTML = '';
+                    // 将提示元素添加到指定的 div 中
+                    targetDiv.appendChild(messageElement);
+                } else {
+                    console.error('目标 div 不存在');
+                }
+            }
+        });
+        $(document).ready(function () {
+            $("#submit").click(function () {
+                var username = $("#user").val();
+                var password = $("#password").val();
+                var identity = $("input[name='userType']:checked").val();
+
+                if (!username || !password || !identity) {
+                    alert("账号、密码和身份不能为空");
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "http://127.0.0.1:5000/register",
+                    data: JSON.stringify({ username: username, password: password, identity: identity }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    crossDomain: true,
+                    success: function (data) {
+                        if (data.status == 200) {
+                            alert("注册成功");
+                            var username = $("#user").val('');
+                            var password = $("#password").val('');
+
+                            alert("用户名已存在");
+                        }
+                    },
+                    error: function () {
+                        alert("处理请求时发生错误");
+                    }
+                });
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>

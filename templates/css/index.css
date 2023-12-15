@@ -1,0 +1,31 @@
+@media all and (min-width:750) {
+    html {
+        font-size: 75px;
+    }
+}
+
+@media all and (max-width:649) {
+    html {
+        font-size: 30px;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+.body {
+    width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+    color: inherit;
+}

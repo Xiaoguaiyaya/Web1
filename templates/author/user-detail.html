@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小怪鸭鸭的文章管理系统</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/navcss/navtemplate.css">
+    <link rel="stylesheet" href="../css/maincss/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .user-detail {
+            width: 98%;
+            height: 200px;
+            background-color: antiquewhite;
+            margin: auto 1%;
+        }
+
+        .user-detail div {
+            width: 100%;
+            height: 50px;
+        }
+
+        .user-detail .user-detail-concern button {
+            width: 100px;
+            height: 40px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #0089ff;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="body">
+        <nav>
+            <div class="logo">
+                <a href="javascript:;" data-page="author.html">
+                    <img src="../image\logo.png" alt="小怪鸭鸭">
+                </a>
+            </div>
+            <div class="logo-w">
+                <p>小怪鸭鸭的文章管理系统-用户详情</p>
+            </div>
+            <div class="dl">
+                <div class="nav-1">
+                    <div class="nav-1-1">
+                        <a href="javascript:;" data-page="author.html">首页</a>
+                    </div>
+                    <div class="nav-1-2 dropdown-container">
+                        <a href="javascript:;">管理列表</a>
+                        <ul class="dropdown-list">
+                            <li><a href="javascript:;" data-page="index.html">管理界面</a></li>
+                            <li><a href="#" data-page="写文章.html">写文章</a></li>
+                            <li><a href="javascript:;" data-page="changePassword.html">修改密码</a></li>
+                            <li><a href="../index.html">退出</a></li>
+                        </ul>
+                    </div>
+                    <div class="input-submit" id="loginButton" style="color: black;font-weight: 300;">
+                        {{用户名}}
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+        <main class="content">
+            <div class="user-detail">
+                <div class="user-detail-name">用户名：</div>
+                <div class="user-detail-article">用户发表文章数：</div>
+                <div class="user-detail-concern">
+                    <button id="followButton" class="followButton">关注用户</button>
+                </div>
+            </div>
+        </main>
+        <footer></footer>
+    </div>
+
+    <script>
+        var userId;
+        var author;
+        var userId_target;
+
+        function getUserInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            author = urlParams.get('author');
+            userId = urlParams.get('userId');
+            if (userId && userId.includes('#')) {
+                userId = userId.replace('#', '');
+            }
+            if (author) {
+                if (!userId) {
+                    window.location.href = "../Template/html/login.html";
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:5000/get_user",
+                        data: JSON.stringify({ user_id: userId }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.status === '200') {
+                                // 渲染用户名到指定的元素
+                                $("#loginButton").text(data.username);
+
+                                // 在异步请求成功后定义 redirectToPage 函数
+                                window.redirectToPage = function (page) {
+                                    window.location.href = page + '?id=' + userId;
+                                };
+                            } else {
+                                console.error('获取用户信息失败:', data.error);
+                            }
+                        },
+                        error: function (error) {
+                            console.error('请求错误:', error);
+                        }
+                    });
+                }
+            } else {
+                window.location.href = "../Template/html/login.html";
+            }
+
+        }
+
+
+        // 处理点击事件，确保 data-page 属性包含目标页面
+        $(document).on('click', 'a[data-page]', function (event) {
+            event.preventDefault();
+            redirectToPage($(this).data('page'));
+        });
+
+        // 调用 getUserInfo 获取用户信息并设置页面状态
+        getUserInfo();
+
+        getUserdetail_part(author);
+
+        function getUserdetail_part(author) {
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/get_user_data",
+                data: JSON.stringify({ username: author }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $('.user-detail-name').text('用户名：' + data.username);
+                    $('.user-detail-article').text('用户发表文章数：' + data.article_count);
+                    userId_target = data.user_id;
+                    // 初始化按钮状态
+                    checkFollowingStatus(userId, userId_target);
+                }
+            });
+        }
+
+
+        var followButton = $('#followButton');
+
+
+        // 获取关注状态
+        function checkFollowingStatus() {
+            $.ajax({
+                type: 'post',
+                url: 'http://127.0.0.1:5000/check_following',
+                dataType: 'json',
+                data: JSON.stringify({ user_id_1: userId, user_id_2: userId_target }),
+                contentType: 'application/json',
+                success: function (data) {
+                    updateButtonStatus(data.is_following);
+                },
+                error: function (error) {
+                    console.error('获取关注状态失败:', error);
+                }
+            });
+        }
+
+        // 发送关注请求
+        function followUser() {
+            $.ajax({
+                type: 'post',
+                url: 'http://127.0.0.1:5000/follow_user',
+                dataType: 'json',
+                data: JSON.stringify({ user_id_1: userId, user_id_2: userId_target }),
+                contentType: 'application/json',
+                success: function (data) {
+                    // 更新按钮文本
+                    updateButtonStatus(true);
+                },
+                error: function (error) {
+                    console.error('关注用户失败:', error);
+                }
+            });
+        }
+
+        // 发送取消关注请求
+        function unfollowUser() {
+            $.ajax({
+                type: 'post',
+                url: 'http://127.0.0.1:5000/unfollow_user',
+                dataType: 'json',
+                data: JSON.stringify({ user_id_1: userId, user_id_2: userId_target }),
+                contentType: 'application/json',
+                success: function (data) {
+                    // 更新按钮文本
+                    updateButtonStatus(false);
+                },
+                error: function (error) {
+                    console.error('取消关注用户失败:', error);
+                }
+            });
+        }
+
+        // 更新按钮文本和状态
+        function updateButtonStatus(isFollowing) {
+            if (isFollowing) {
+                followButton.text('已关注');
+            } else {
+                followButton.text('关注用户');
+            }
+        }
+
+        $(document).ready(function () {
+
+            // 使用事件代理，监听父元素
+            $(document).on('click', '#followButton', function () {
+                // 判断当前按钮状态
+                var isFollowing = followButton.text() === '已关注';
+
+                if (isFollowing) {
+                    // 已关注状态，发送取消关注请求
+                    unfollowUser();
+                } else {
+                    // 未关注状态，发送关注请求
+                    followUser();
+                }
+            });
+        });
+
+
+    </script>
+    <script src="../js/navjs/navtemplate.js"></script>
+    <script src="../js/index-nav.js"></script>
+    <script src="../js/navjs/header.js"></script>
+    <script src="../js/mainjs/main.js"></script>
+</body>
+
+</html>

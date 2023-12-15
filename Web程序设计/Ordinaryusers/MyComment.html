@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小怪鸭鸭的文章管理系统</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/navcss/navtemplate.css">
+    <link rel="stylesheet" href="../css/maincss/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .comment-list ul li {
+            list-style: none;
+            width: 99%;
+            height: 50px;
+            background-color: antiquewhite;
+            border-bottom: 1px dashed #999;
+            line-height: 50px;
+        }
+
+        li {
+            display: inline-block;
+        }
+
+        .comment-list-item {
+            float: left;
+            width: 84%;
+        }
+
+        .comment-list-item .comment-list-item1 {
+            float: left;
+            max-height: 50px;
+            max-width: 91%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .comment-list-item .comment-list-time {
+            float: right;
+            height: 50px;
+            width: 8%;
+            font-size: 13px;
+            color: #999;
+        }
+
+        .comment-list-delete {
+            text-align: center;
+            float: right;
+            width: 7%;
+            margin-right: 10px;
+        }
+
+        .comment-list-uplode {
+            text-align: center;
+            float: right;
+            width: 7%;
+            margin-right: 2px;
+        }
+
+        .comment-list-delete input {
+            width: 60px;
+            height: 30px;
+            border: 0;
+            border-radius: 5px;
+            color: white;
+            background-color: #008f99;
+            cursor: pointer;
+        }
+
+        .comment-list-uplode input {
+            width: 60px;
+            height: 30px;
+            border: 0;
+            border-radius: 5px;
+            color: white;
+            background-color: #008f99;
+            cursor: pointer;
+        }
+
+        .comment-list-id {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="body">
+        <nav>
+            <div class="logo">
+                <a href="javascript:;" data-page="Ordinaryusers.html">
+                    <img src="../image\logo.png" alt="小怪鸭鸭">
+                </a>
+            </div>
+            <div class="logo-w">
+                <p>小怪鸭鸭的文章管理系统-我的评论</p>
+            </div>
+            <div class="dl">
+                <div class="nav-1">
+                    <div class="nav-1-1">
+                        <a href="#" data-page="Ordinaryusers.html">首页</a>
+                    </div>
+                    <div class="nav-1-2 dropdown-container">
+                        <a href="javascript:;">管理列表</a>
+                        <ul class="dropdown-list">
+                            <li><a href="javascript:;" data-page="MyHomePages.html">我的主页</a></li>
+                            <li><a href="javascript:;">我的评论</a></li>
+                            <li><a href="javascript:;" data-page="changePassword.html">修改密码</a></li>
+                            <li><a href="../index.html">退出</a></li>
+                        </ul>
+                    </div>
+                    <div class="input-submit" id="loginButton" style="color: black;font-weight: 300;">
+                        {{用户名}}
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+        <main class="content">
+            <div class="comment-list">
+                <ul id="commentList">
+                    <!-- 评论将动态添加到这里 -->
+                    <div class="comment-list-item1">
+                        <span class="comment-text">没有评论哦！</span>
+                        <input type="text" class="comment-input" style="display: none;">
+                    </div>
+                </ul>
+            </div>
+        </main>
+        <footer></footer>
+    </div>
+
+    <script>
+        var userId;
+
+
+        function getUserInfo() {
+            var url = window.location.href;
+            var params = url.split('?')[1];
+            var keyValuePairs;
+
+            if (params) {
+                keyValuePairs = params.split('&');
+                var paramsObject = {};
+                for (var i = 0; i < keyValuePairs.length; i++) {
+                    var pair = keyValuePairs[i].split('=');
+                    paramsObject[pair[0]] = pair[1];
+                }
+
+                userId = paramsObject['id'];
+
+                if (!userId) {
+                    window.location.href = "../Template/html/login.html";
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:5000/get_user",
+                        data: JSON.stringify({ user_id: userId }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.status === '200') {
+                                $("#loginButton").text(data.username);
+
+                                window.redirectToPage = function (page) {
+                                    window.location.href = page + '?id=' + userId;
+                                };
+                            } else {
+                                console.error('获取用户信息失败:', data.error);
+                            }
+                        },
+                        error: function (error) {
+                            console.error('请求错误:', error);
+                        }
+                    });
+                }
+            } else {
+                window.location.href = "../Template/html/login.html";
+            }
+        }
+
+
+        $(document).on('click', 'a[data-page]', function (event) {
+            event.preventDefault();
+            redirectToPage($(this).data('page'));
+        });
+
+        getUserInfo();
+
+
+        getComments(userId);
+
+        function getComments(userId) {
+            $.ajax({
+                type: 'post',
+                url: 'http://127.0.0.1:5000/get_user_comments',
+                dataType: 'json',
+                data: JSON.stringify({ user_id: userId }),
+                contentType: 'application/json',
+                success: function (data) {
+                    renderComments(data.comments);
+                },
+                error: function (error) {
+                    console.error('获取评论失败:', error);
+                }
+            });
+        }
+
+        // 渲染评论函数
+        function renderComments(comments) {
+            var commentList = $('#commentList');
+
+            commentList.empty();
+            comments.forEach(function (comment) {
+                var listItem = $('<li>');
+
+                var commentItem = $('<div class="comment-list-item"></div>');
+                commentItem.append('<div class="comment-list-item1">' + comment.comment_text + '</div>');
+                commentItem.append('<div class="comment-list-time">' + comment.comment_time + '</div>');
+                commentItem.append('<div class="comment-list-id" >' + comment.comment_id + '</div>');
+                listItem.append(commentItem);
+
+                var deleteButton = $('<div class="comment-list-delete">').html('<input type="button" value="删除评论">');
+                var updateButton = $('<div class="comment-list-uplode">').html('<input type="button" value="修改评论">');
+                listItem.append(deleteButton);
+                listItem.append(updateButton);
+
+                commentList.append(listItem);
+            });
+        }
+
+        $(document).ready(function () {
+            $('#commentList').on('click', '.comment-list-uplode input', function () {
+                handleCommentUpdate.call(this);
+            });
+
+            function handleCommentUpdate() {
+                var listItem = $(this).closest('li');
+                var commentItem = listItem.find('.comment-list-item1');
+                var commentText = commentItem.text().trim();
+
+                commentItem.html('<input type="text" class="comment-input" value="' + commentText + '">');
+                $(this).val('提交修改').off('click').on('click', function () {
+                    var listItem = $(this).closest('li');
+
+                    var updatedText = listItem.find('.comment-input').val();
+                    var commentId = listItem.find('.comment-list-id').text().trim();
+
+                    var createTime = new Date().toISOString().split('T')[0];
+
+                    $.ajax({
+                        type: 'post',
+                        url: 'http://127.0.0.1:5000/modify_comment',
+                        dataType: 'json',
+                        data: JSON.stringify({ comment_id: commentId, text: updatedText, create_time: createTime }),
+                        contentType: 'application/json',
+                        success: function (data) {
+                            // 更新 UI（如果需要）
+                            console.log('评论已成功更新');
+
+                            commentItem.html(updatedText);
+                            listItem.find('.comment-list-uplode input').val('修改评论');
+                        },
+                        error: function (error) {
+                            console.error('无法更新评论:', error);
+                        }
+                    });
+                });
+            }
+        });
+        $('#commentList').on('click', '.comment-list-delete input', function () {
+            var listItem = $(this).closest('li');
+            var commentId = listItem.find('.comment-list-id').text().trim();
+            $.ajax({
+                type: 'post',
+                url: 'http://127.0.0.1:5000/delete_comment',
+                dataType: 'json',
+                data: JSON.stringify({ comment_id: commentId }),
+                contentType: 'application/json',
+                success: function (data) {
+                    getComments(userId);
+                    alert("删除成功！");
+                },
+                error: function (error) {
+                    console.error('无法删除评论:', error);
+                }
+            });
+        });
+
+    </script>
+    <script src="../js/navjs/navtemplate.js"></script>
+    <script src="../js/index-nav.js"></script>
+</body>
+
+</html>

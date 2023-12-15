@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小怪鸭鸭的文章管理系统</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/navcss/navtemplate.css">
+    <link rel="stylesheet" href="../css/maincss/main.css">
+    <link rel="stylesheet" href="css/articles-mian.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .selected {
+            background-color: orange;
+        }
+
+        .pagination-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .pagination-container li {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        /* 左箭头样式 */
+        .pagination-container::before {
+            /* 左箭头的 Unicode 字符或其他内容 */
+            font-size: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        /* 右箭头样式 */
+        .pagination-container::after {
+            /* 右箭头的 Unicode 字符或其他内容 */
+            font-size: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="body">
+        <nav>
+            <div class="logo">
+                <a href="../index.html">
+                    <img src="../image\logo.png" alt="小怪鸭鸭">
+                </a>
+            </div>
+            <div class="logo-w">
+                <p>小怪鸭鸭的文章管理系统</p>
+            </div>
+            <div class="dl">
+                <div class="nav-1">
+                    <div class="nav-1-1">
+                        <a href="../index.html">首页</a>
+                    </div>
+                    <div class="input-submit" id="loginButton">
+                        <a href="html/login.html" class="login_a">登录</a>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+        <header>
+            <div class="header-1">
+                <div class="header-1-1">
+                    <a href="../index.html">首页</a>
+                </div>
+                <div class="nav-list" id="navList">
+                </div>
+                <div class="search">
+                    <div class="ser-in">
+                        <input type="text" id="search" value="请输入搜索内容">
+                    </div>
+                    <div class="ser-bt">
+                        <a href="#" id="searchBtn">搜索</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="content">
+            <div class="main-1">
+                <div class="main-left">
+                    <div class="directory">
+                        <h2>目录</h2>
+                        <h3 id="categoryName"></h3>
+                        <div id="subtitles"></div>
+                    </div>
+                </div>
+                <div class="main-right">
+                    <div class="article-list"></div>
+                    <div class="pagination-container article-nav" id="paginationContainer"></div>
+                </div>
+            </div>
+        </main>
+        <footer></footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const jsonData = {
+                "categories": [
+                    {
+                        "name": "编程语言",
+                        "subtitles": ["C语言", "python", "其它"]
+                    },
+                    {
+                        "name": "数据结构",
+                        "subtitles": ["常用算法", "进阶算法", "其它"]
+                    },
+                    {
+                        "name": "web开发",
+                        "subtitles": ["前端", "后端", "其它"]
+                    },
+                    {
+                        "name": "数据库",
+                        "subtitles": ["关系数据库", "非关系", "其它"]
+                    },
+                    {
+                        "name": "大数据",
+                        "subtitles": ["大数据框架", "大数据基础", "其它"]
+                    },
+                    {
+                        "name": "机器学习",
+                        "subtitles": ["机器学习", "深度学习", "其它"]
+                    },
+                    {
+                        "name": "其它文章",
+                        "subtitles": ["计算机", "非计算机", "其它"]
+                    },
+                ]
+            };
+
+            let selectedCategory = sessionStorage.getItem('selectedCategory');
+            let selectedSubtitle = sessionStorage.getItem('selectedSubtitle');
+            const categoryNameElement = $('#categoryName');
+            const subtitlesContainer = $('#subtitles');
+            const mainRightContainer = $('.article-list');
+            const paginationContainer = $('#paginationContainer');
+            const loginButton = $('#loginButton');
+
+            // 渲染一级标题
+            if (selectedCategory) {
+                categoryNameElement.text(`${selectedCategory}`);
+            }
+
+            // 渲染二级标题
+            if (selectedCategory) {
+                const selectedCategoryData = jsonData.categories.find(category => category.name === selectedCategory);
+
+                if (selectedCategoryData) {
+                    selectedCategoryData.subtitles.forEach(subtitle => {
+                        const subtitleElement = $('<h4>').text(subtitle);
+
+                        if (subtitle === selectedSubtitle) {
+                            subtitleElement.addClass('selected');
+                        }
+
+                        subtitleElement.click(function () {
+                            $('.selected').removeClass('selected');
+                            subtitleElement.addClass('selected');
+                            selectedCategory = selectedCategoryData.name;
+                            selectedSubtitle = subtitle;
+                            sessionStorage.setItem('selectedCategory', selectedCategory);
+                            sessionStorage.setItem('selectedSubtitle', selectedSubtitle);
+                            requestAndRenderArticles();
+                        });
+
+                        subtitlesContainer.append(subtitleElement);
+                    });
+                }
+            }
+
+            var itemsPerPage = 7;
+            var currentPage = 1;
+            var totalArticles = 0;
+            var totalPages = 0;
+
+            // 初始化渲染
+            requestAndRenderArticles();
+
+            function requestAndRenderArticles() {
+                // 发送获取文章总数的请求
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://127.0.0.1:5000/read_article',
+                    data: JSON.stringify({
+                        title1: selectedCategory,
+                        title2: selectedSubtitle,
+                    }),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    crossDomain: true,
+                    success: function (data) {
+                        if (data.success && data.articles) {
+                            totalArticles = data.articles.length;
+                            totalPages = Math.ceil(totalArticles / itemsPerPage);
+                            renderPagination(); // 仅在初始化时渲染分页
+                            requestPageAndRenderArticles(currentPage);
+                        } else {
+                            console.error(`请求成功但返回错误: ${JSON.stringify(data)}`);
+                        }
+                    },
+                    error: function (error) {
+                        console.error('请求错误:', error);
+                    }
+                });
+            }
+
+            function requestPageAndRenderArticles(page) {
+                // 发送获取分页指定页码的文章请求
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://127.0.0.1:5000/read_article_f',
+                    data: JSON.stringify({
+                        title1: selectedCategory,
+                        title2: selectedSubtitle,
+                        page: page,
+                        pageSize: itemsPerPage,
+                    }),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    crossDomain: true,
+                    success: function (data) {
+                        if (data.success && data.articles) {
+                            // 将renderArticles函数放在此处
+                            renderArticles(mainRightContainer, data.articles);
+                        } else {
+                            console.error(`请求成功但返回错误: ${JSON.stringify(data)}`);
+                        }
+                    },
+                    error: function (error) {
+                        console.error('请求错误:', error);
+                    }
+                });
+            }
+
+            // 为分页容器绑定事件
+            paginationContainer.on('click', 'li', function () {
+                const clickedPage = parseInt($(this).text());
+
+                if (!isNaN(clickedPage)) {
+                    changePage(clickedPage);
+                }
+            });
+
+            function renderPagination() {
+                paginationContainer.empty();
+
+                const leftArrow = $('<li>').text('<').click(function () {
+                    if (currentPage > 1) {
+                        changePage(currentPage - 1);
+                    }
+                });
+                paginationContainer.append(leftArrow);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const li = $('<li>').text(i).click(function () {
+                        changePage(i);
+                    });
+                    paginationContainer.append(li);
+                }
+
+                const rightArrow = $('<li>').text('>').click(function () {
+                    if (currentPage < totalPages) {
+                        changePage(currentPage + 1);
+                    }
+                });
+                paginationContainer.append(rightArrow);
+            }
+
+            function changePage(newPage) {
+                currentPage = newPage;
+                requestPageAndRenderArticles(currentPage);
+            }
+
+
+            function renderArticles(container, articles) {
+                container.empty();
+                articles.forEach(article => {
+                    const articleElement = $('<div>');
+
+                    const titleElement = $('<a>')
+                        .attr('href', `articlesddetail.html?article_id=${article.id}`)
+                        .css({
+                            color: 'rgb(122,130,119)',
+                            fontSize: '16px',
+                            lineHeight: '50px',
+                        })
+                        .html(`${article.title}`)
+                        .hover(
+                            function () {
+                                $(this).css('color', '#008aff');
+                            },
+                            function () {
+                                $(this).css('color', '#CCC');
+                            }
+                        );
+
+                    articleElement.append(titleElement);
+
+                    const infoElement = $('<div>').html(`<span style="font-size: 12px;line-height: 30px;">ID: ${article.id} | 发表时间: ${article.creat_time}</span>`);
+                    articleElement.append(infoElement);
+
+                    container.append(articleElement);
+                });
+            }
+
+
+
+            const navList = $('#navList');
+
+            $.each(jsonData.categories, function (index, categoryData) {
+                const dropdownContainer = $('<div>').addClass('dropdown-container-0');
+
+                const link = $('<a>').attr('href', 'articles.html').text(categoryData.name).data('category', categoryData.name).click(function () {
+                    navigateToCategory($(this).data('category'), categoryData.subtitles[0]);
+                });
+
+                const dropdownList = $('<ul>').addClass('dropdown-list-0');
+
+                $.each(categoryData.subtitles, function (subIndex, subtitle) {
+                    const subOption = $('<li>');
+                    const subLink = $('<a>').attr('href', 'javascript:;').text(subtitle).data('category', categoryData.name).data('subtitle', subtitle).click(function () {
+                        navigateToSubtitle($(this).data('category'), $(this).data('subtitle'));
+                    });
+                    subOption.append(subLink);
+                    dropdownList.append(subOption);
+                });
+
+                dropdownContainer.append(link);
+                dropdownContainer.append(dropdownList);
+                navList.append(dropdownContainer);
+            });
+
+            function navigateToCategory(category, subtitle) {
+                sessionStorage.setItem('selectedCategory', category);
+                sessionStorage.setItem('selectedSubtitle', subtitle);
+            }
+
+            function navigateToSubtitle(category, subtitle) {
+                sessionStorage.setItem('selectedCategory', category);
+                sessionStorage.setItem('selectedSubtitle', subtitle);
+                window.location.href = 'articles.html';
+            }
+
+            loginButton.click(function () {
+                window.location.href = 'Template/html/login.html';
+            });
+
+            function getParameterByName(name, url) {
+                if (!url) url = window.location.href;
+                name = name.replace(/[\[\]]/g, "\\$&");
+                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, " "));
+            }
+
+            var userId = getParameterByName('id');
+
+            $("#searchBtn").click(function () {
+                var keyword = $('#search').val();
+
+                $.ajax({
+                    type: 'post',
+                    url: 'http://127.0.0.1:5000/search_articles_title',
+                    contentType: 'application/json;',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        keyword: keyword,
+                        title1: selectedCategory,
+                        title2: selectedSubtitle,
+                        page: currentPage,
+                        pageSize: itemsPerPage
+                    }),
+                    crossDomain: true,
+                    success: function (data) {
+                        if (data.success == 404) {
+                            $('.article-list').html('<h1>没有查询到文章！</h1>');
+                        } else if (data.success) {
+                            renderArticles(mainRightContainer, data.articles);
+                            renderPagination(data.articles.length);
+                        }
+                    },
+                });
+            });
+        });
+
+
+
+    </script>
+    <script src="../js/navjs/navtemplate.js"></script>
+    <script src="../js/index-nav.js"></script>
+    <script src="../js/navjs/header.js"></script>
+    <script src="../js/mainjs/main.js"></script>
+</body>
+
+</html>

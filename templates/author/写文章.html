@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小怪鸭鸭的文章管理系统</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/navcss/navtemplate.css">
+    <link rel="stylesheet" href="../css/maincss/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .user-info-data-collect {
+            width: 100%;
+            font-size: 14px;
+            font-weight: 300;
+            color: #999;
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+        }
+
+        .user-info-data-concern {
+            width: 100%;
+            font-size: 14px;
+            font-weight: 300;
+            color: #999;
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+        }
+
+        .user-info-data-collect-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #008aff;
+        }
+
+        .user-info-data-concern-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #008aff;
+        }
+
+        .content {
+            background-color: white;
+        }
+
+
+        .title1 {
+            float: left;
+            width: 20%;
+            background-color: white;
+            height: 50px;
+            color: #008aff;
+        }
+
+        .title1 div {
+            float: left;
+            width: 40%;
+            height: 50px;
+            background-color: #fff;
+            font-size: 16px;
+
+        }
+
+        .title1 select {
+            float: left;
+            width: 50%;
+            height: 30px;
+            border: 0;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            font-size: 14px;
+        }
+
+        .title2 {
+            float: left;
+            width: 80%;
+            background-color: white;
+            height: 50px;
+            color: #008aff;
+        }
+
+        .title2 div {
+            float: left;
+            width: 10%;
+            height: 50px;
+            background-color: #fff;
+            font-size: 16px;
+
+        }
+
+        .title2 select {
+            float: left;
+            width: 13%;
+            height: 30px;
+            border: 0;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            font-size: 14px;
+        }
+
+        .title {
+            float: left;
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            background-color: #fff;
+            font-size: 20px;
+            color: #008aff;
+        }
+
+        .title div {
+            float: left;
+            width: 5%;
+            height: 30px;
+        }
+
+        .title input {
+            width: 90%;
+            height: 30px;
+            border: 0;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            font-size: 14px;
+            padding-left: 10px;
+        }
+
+        .article-1 {
+            float: left;
+            width: 100%;
+            height: 450px;
+            background-color: #fff;
+            font-size: 20px;
+            color: #008aff;
+        }
+
+        .article-1 div {
+            width: 100%;
+            height: 40px;
+            line-height: 50px;
+        }
+
+        .article-1 textarea {
+            width: 98%;
+            height: 380px;
+            padding: 10px;
+        }
+
+        .fujian {
+            float: left;
+            line-height: 30px;
+            float: left;
+            width: 100%;
+            height: 80px;
+            background-color: white;
+        }
+
+        .button-1 {
+            float: left;
+            width: 100%;
+            height: 50px;
+            line-height: 40px;
+            background-color: white;
+            font-size: 16px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .button-1 button {
+            width: 80px;
+            height: 40px;
+            border: 0;
+            background-color: #008aff;
+            border-radius: 5px;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="body">
+        <nav>
+            <div class="logo">
+                <a href="javascript:;" data-page="author.html">
+                    <img src="../image\logo.png" alt="小怪鸭鸭">
+                </a>
+            </div>
+            <div class="logo-w">
+                <p>小怪鸭鸭的文章管理系统-我的主页</p>
+            </div>
+            <div class="dl">
+                <div class="nav-1">
+                    <div class="nav-1-1">
+                        <a href="javascript:;" data-page="author.html">首页</a>
+                    </div>
+                    <div class="nav-1-2 dropdown-container">
+                        <a href="javascript:;">管理列表</a>
+                        <ul class="dropdown-list">
+                            <li><a href="javascript:;">我的主页</a></li>
+                            <li><a href="javascript:;" data-page="changePassword.html">修改密码</a></li>
+                            <li><a href="../index.html">退出</a></li>
+                        </ul>
+                    </div>
+                    <div class="input-submit" id="loginButton" style="color: black;font-weight: 300;">
+                        {{用户名}}
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+        <main class="content">
+            <div class="title1">
+                <div for="title1">一级标题：</div>
+                <select id="title1">
+                    <!-- 动态生成一级标题下拉框选项 -->
+                </select>
+            </div>
+
+            <div class="title2">
+                <div for="title2">二级标题：</div>
+                <select id="title2">
+                    <!-- 动态生成二级标题下拉框选项 -->
+                </select>
+            </div>
+            <div class="title">
+                <div for="title3">标题：</div>
+                <input type="text" id="title3" placeholder="请输入文章标题">
+            </div>
+            <div class="article-1">
+                <div for="text">文章内容：</div>
+                <textarea id="text" rows="5" placeholder="请输入文章内容"></textarea>
+            </div>
+
+            <div class="fujian">
+                <div for="annex">附件：</div>
+                <input type="file" id="annex" multiple>
+            </div>
+            <div class="button-1">
+                <button onclick="uploadFile()">发布文章</button>
+            </div>
+
+        </main>
+        <footer></footer>
+    </div>
+
+    <script>
+        var userId;
+        function getUserInfo() {
+            var url = window.location.href;
+            var params = url.split('?')[1];
+            var keyValuePairs;
+
+            if (params) {
+                keyValuePairs = params.split('&');
+                var paramsObject = {};
+
+                for (var i = 0; i < keyValuePairs.length; i++) {
+                    var pair = keyValuePairs[i].split('=');
+                    paramsObject[pair[0]] = pair[1];
+                }
+
+                userId = paramsObject['id'];
+                if (userId && userId.includes('#')) {
+                    userId = userId.replace('#', '');
+                }
+
+                if (!userId) {
+                    window.location.href = "../Template/html/login.html";
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://127.0.0.1:5000/get_user",
+                        data: JSON.stringify({ user_id: userId }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.status === '200') {
+                                $("#loginButton").text(data.username);
+
+                                window.redirectToPage = function (page) {
+                                    window.location.href = page + '?id=' + userId;
+                                };
+                            } else {
+                                console.error('获取用户信息失败:', data.error);
+                            }
+                        },
+                        error: function (error) {
+                            console.error('请求错误:', error);
+                        }
+                    });
+                }
+            } else {
+                window.location.href = "../Template/html/login.html";
+            }
+        }
+
+
+        $(document).on('click', 'a[data-page]', function (event) {
+            event.preventDefault();
+            redirectToPage($(this).data('page'));
+        });
+
+        getUserInfo();
+
+        const jsonData = {
+            "categories": [
+                {
+                    "name": "编程语言",
+                    "subtitles": ["C语言", "python", "其它"]
+                },
+                {
+                    "name": "数据结构",
+                    "subtitles": ["常用算法", "进阶算法", "其它"]
+                },
+                {
+                    "name": "web开发",
+                    "subtitles": ["前端", "后端", "其它"]
+                },
+                {
+                    "name": "数据库",
+                    "subtitles": ["关系数据库", "非关系", "其它"]
+                },
+                {
+                    "name": "大数据",
+                    "subtitles": ["大数据框架", "大数据基础", "其它"]
+                },
+                {
+                    "name": "机器学习",
+                    "subtitles": ["机器学习", "深度学习", "其它"]
+                },
+                {
+                    "name": "其它文章",
+                    "subtitles": ["计算机", "非计算机", "其它"]
+                },
+            ]
+        };
+
+        $(document).ready(function () {
+            // 触发一次change事件
+            title1Select.trigger('change');
+        });
+        // 动态生成一级标题下拉框选项
+        var title1Select = $('#title1');
+        jsonData.categories.forEach(category => {
+            title1Select.append($('<option>', {
+                value: category.name,
+                text: category.name
+            }));
+        });
+
+        // 根据一级标题的选择动态生成二级标题下拉框选项
+        title1Select.change(function () {
+            var selectedCategory = $(this).val();
+            var subtitles = jsonData.categories.find(category => category.name === selectedCategory).subtitles;
+
+            var title2Select = $('#title2');
+            title2Select.empty();
+
+            subtitles.forEach(subtitle => {
+                title2Select.append($('<option>', {
+                    value: subtitle,
+                    text: subtitle
+                }));
+            });
+        });
+
+        // 发布文章函数
+        function publishArticle(annex_route) {
+            var title1 = $('#title1').val();
+            var title2 = $('#title2').val();
+            var title3 = $('#title3').val();
+            var user_id = userId;
+            var create_time = new Date().toISOString().split('T')[0];
+            var text = $('#text').val();
+            var annex_route = annex_route
+            // 检查字段是否为空
+            if (!title1 || !title2 || !title3 || !text) {
+                alert('请填写所有字段！');
+                return;
+            }
+  
+            if (title3.length > 100) {
+                alert('标题过长！控制在100字以内');
+                return;
+            }
+
+            // 构造 JSON 数据
+            var requestData = {
+                title1: title1,
+                title2: title2,
+                title3: title3,
+                user_id: user_id,
+                create_time: create_time,
+                text: text,
+                annex_route: annex_route
+            };
+
+            // 发送请求到后端
+            $.ajax({
+                url: 'http://127.0.0.1:5000/publish_article',
+                type: 'POST',
+                contentType: 'application/json',  // 设置请求头为 JSON
+                data: JSON.stringify(requestData),  // 直接传递 JSON 数据
+                success: function (data) {
+                    alert('发布成功');
+                    $('#title3').val('');
+                    $('#text').val('');
+                    $('#annex')[0].val('')
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+        // 文件上传函数
+        function uploadFile() {
+            var annexFiles = $('#annex')[0].files;
+
+            // 判断是否有文件上传
+            if (annexFiles.length === 0) {
+                filePath = 'None';
+                publishArticle(filePath);
+                return;
+            }
+            else {
+                var formData = new FormData();
+
+                for (var i = 0; i < annexFiles.length; i++) {
+                    formData.append('file', annexFiles[i]);
+                }
+
+                $.ajax({
+                    url: 'http://127.0.0.1:5000/upload_file',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.status == 400) {
+                            alert('此类文件不支持上传')
+                        }
+                        else {
+                            var filePath = data.file_path;
+                            publishArticle(filePath);
+                        }
+
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        }
+    </script>
+    <script src="../js/navjs/navtemplate.js"></script>
+    <script src="../js/index-nav.js"></script>
+    <script src="../js/navjs/header.js"></script>
+    <script src="../js/mainjs/main.js"></script>
+</body>
+
+</html>
